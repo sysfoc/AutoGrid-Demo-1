@@ -4,14 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  FaHeart,
-  FaCalculator,
-  FaHandshake,
-  FaSun,
-  FaMoon,
-  FaUser,
-} from "react-icons/fa";
+import { Heart, Sun, Moon, Search, Menu, X, ChevronDown } from "lucide-react";
 import { useSidebar } from "../context/SidebarContext";
 import Image from "next/image";
 
@@ -92,7 +85,6 @@ const HeroSection = () => {
   const [location, setLocation] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("all");
   const idPrefix = useRef(Date.now().toString(36)).current;
-
 
   const heroImage = "/autogrid.avif";
 
@@ -217,6 +209,9 @@ const HeroSection = () => {
     }
   }, [selectedMake, carSearchData]);
 
+  const navLinkClasses =
+    "text-black px-5 py-2 rounded-xl font-semibold hover:text-white hover:bg-purple-600 dark:hover:bg-purple-700 dark:text-white transition-colors";
+
   const handleCarSearch = useCallback(async () => {
     if (!selectedMake && !maxPrice && !location) {
       alert("Please select at least one search criterion.");
@@ -251,8 +246,8 @@ const HeroSection = () => {
   ]);
 
   useEffect(() => {
-  fetchCarSearchData();
-}, [fetchCarSearchData]);
+    fetchCarSearchData();
+  }, [fetchCarSearchData]);
 
   const ConditionTab = ({ condition, label, selected, onClick }) => (
     <button
@@ -262,470 +257,322 @@ const HeroSection = () => {
         console.log(`Clicking ${condition} tab`);
         onClick();
       }}
-      className={`relative cursor-pointer border-b-2 px-6 py-3 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500 ${
+      className={`rounded-full px-6 py-2 text-sm font-medium transition-all duration-200 ${
         selected
-          ? "border-green-600 bg-white font-semibold text-green-600 dark:border-green-400 dark:bg-gray-800 dark:text-green-400"
-          : "border-transparent bg-gray-50 text-gray-600 hover:border-green-600/30 hover:bg-white hover:text-green-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:border-green-400/30 dark:hover:bg-gray-800 dark:hover:text-green-400"
+          ? "bg-white text-purple-600 shadow-md"
+          : "text-white/80 hover:bg-white/10 hover:text-white"
       }`}
     >
       {label}
-      {selected && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-600 dark:bg-green-400"></div>
-      )}
     </button>
   );
+
   return (
     <>
-      <section className="relative h-[87vh] w-full overflow-hidden">
-        <nav className="absolute left-0 right-0 top-0 z-40">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-4">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/" className="group flex items-center space-x-3">
-                <div className="flex min-h-[48px] items-center">
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 lg:hidden"
+          onClick={handleMobileMenuClose}
+        >
+          <div className="fixed left-0 top-0 h-full w-80 transform bg-white transition-transform duration-300 dark:bg-gray-800">
+            <div className="p-6">
+              <div className="mb-8 flex items-center justify-between">
+                <div className="flex items-center space-x-3">
                   {logo && !logoError ? (
-                    <div className="relative h-16 w-16">
+                    <div className="relative h-8 w-8 overflow-hidden rounded-lg">
                       <Image
-                        src={logo}
+                        src={logo || "/placeholder.svg"}
                         alt="Logo"
                         fill
                         className="object-contain"
                         onError={handleLogoError}
                         priority
-                        sizes="64px"
+                        sizes="32px"
                       />
                     </div>
                   ) : (
-                    <div className="h-16 w-16 rounded-xl border-2 border-dashed bg-gray-200" />
+                    <div className="h-8 w-8 rounded-lg bg-purple-600"></div>
                   )}
+                  <span className="text-lg font-bold text-gray-900 dark:text-white">
+                    AutoGrid
+                  </span>
                 </div>
-              </Link>
+                <button onClick={handleMobileMenuClose} className="p-2">
+                  <X className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                </button>
+              </div>
 
-              <div className="hidden items-center space-x-6 lg:flex">
-                <div
-                  className="group relative"
-                  onMouseEnter={() => setListingsDropdownOpen(true)}
-                  onMouseLeave={() => setListingsDropdownOpen(false)}
+              <div className="space-y-4">
+                <Link
+                  href="/car-for-sale"
+                  className="block py-2 text-gray-700 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
                 >
-                  <button className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white/90 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-lg active:scale-95">
-                    <span>Listings</span>
-                    <svg
-                      className={`h-4 w-4 transition-transform duration-300 ${listingsDropdownOpen ? "rotate-180" : ""}`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-
-                  {listingsDropdownOpen && (
-                    <div className="absolute left-0 top-full z-50 w-48 rounded-lg border border-white/20 bg-black/80 shadow-lg backdrop-blur-lg">
-                      <div className="py-2">
-                        <Link
-                          href="/car-for-sale"
-                          className="block px-4 py-2 text-sm text-white/90 transition-colors duration-200 hover:bg-white/10 hover:text-green-400"
-                        >
-                          Cars for Sale
-                        </Link>
-                        <Link
-                          href="/cars/leasing"
-                          className="block px-4 py-2 text-sm text-white/90 transition-colors duration-200 hover:bg-white/10 hover:text-green-400"
-                        >
-                          Lease Deals
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div
-                  className="group relative"
-                  onMouseEnter={() => setPagesDropdownOpen(true)}
-                  onMouseLeave={() => setPagesDropdownOpen(false)}
-                >
-                  <button className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white/90 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-lg active:scale-95">
-                    <span>Pages</span>
-                    <svg
-                      className={`h-4 w-4 transition-transform duration-300 ${pagesDropdownOpen ? "rotate-180" : ""}`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-
-                  {pagesDropdownOpen && (
-                    <div className="absolute left-0 top-full z-50 w-48 rounded-lg border border-white/20 bg-black/80 shadow-lg backdrop-blur-lg">
-                      <div className="py-2">
-                        <Link
-                          href="/about"
-                          className="block px-4 py-2 text-sm text-white/90 transition-colors duration-200 hover:bg-white/10 hover:text-green-400"
-                        >
-                          About
-                        </Link>
-                        <Link
-                          href="/contact"
-                          className="block px-4 py-2 text-sm text-white/90 transition-colors duration-200 hover:bg-white/10 hover:text-green-400"
-                        >
-                          Contact
-                        </Link>
-                        <Link
-                          href="/blogs"
-                          className="block px-4 py-2 text-sm text-white/90 transition-colors duration-200 hover:bg-white/10 hover:text-green-400"
-                        >
-                          Blogs
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
+                  Listings
+                </Link>
                 <Link
                   href="/cars/valuation"
-                  className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white/90 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-lg active:scale-95"
+                  className="block py-2 text-gray-700 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
                 >
-                  <FaCalculator className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-                  <span>Car valuation</span>
+                  Car valuation
                 </Link>
-
                 <Link
                   href="/car-financing"
-                  className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white/90 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-lg active:scale-95"
+                  className="block py-2 text-gray-700 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
                 >
-                  <FaCalculator className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-                  <span>Car Financing</span>
+                  Car financing
                 </Link>
-
                 <Link
                   href="/cars/about-us"
-                  className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white/90 transition-all duration-300 hover:bg-white/10 hover:text-white hover:shadow-lg active:scale-95"
+                  className="block py-2 text-gray-700 hover:text-purple-600 dark:text-gray-300 dark:hover:text-purple-400"
                 >
-                  <FaHandshake className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-                  <span>Vehicle Services</span>
+                  Vehicle Services
                 </Link>
               </div>
 
-              <div className="flex items-center space-x-3">
+              <div className="mt-8 border-t border-gray-200 pt-8 dark:border-gray-700">
                 <button
                   onClick={navigateToLogin}
-                  aria-label="Login"
-                  className="hidden items-center space-x-2 rounded-xl bg-white/10 px-4 py-3 text-white/90 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 hover:text-white focus:outline-none lg:flex"
+                  className="mb-4 w-full rounded-lg bg-purple-600 px-4 py-2 font-medium text-white transition-colors hover:bg-purple-700"
                 >
-                  <FaUser className="h-5 w-5" />
-                  <span className="text-sm font-medium">Login</span>
+                  Sign Up
                 </button>
+                <div className="flex space-x-2">
+                  {!topSettings.hideFavourite && (
+                    <button
+                      onClick={navigateToLikedCars}
+                      className="flex-1 rounded-lg border border-gray-200 p-2 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+                    >
+                      <Heart className="mx-auto h-4 w-4 text-gray-600 dark:text-gray-400" />
+                    </button>
+                  )}
+                  {!topSettings.hideDarkMode && (
+                    <button
+                      onClick={toggleDarkMode}
+                      className="flex-1 rounded-lg border border-gray-200 p-2 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
+                    >
+                      {darkMode ? (
+                        <Sun className="mx-auto h-4 w-4 text-gray-600 dark:text-gray-400" />
+                      ) : (
+                        <Moon className="mx-auto h-4 w-4 text-gray-600 dark:text-gray-400" />
+                      )}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-                <button
-                  onClick={handleMobileMenuOpen}
-                  aria-label="Open Menu"
-                  className="group relative rounded-xl bg-white/10 p-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 focus:outline-none lg:hidden"
-                >
-                  <svg
-                    className="h-5 w-5 text-white/90 transition-colors duration-300 group-hover:text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                </button>
+      {/* Main Container */}
+      <div className="mx-auto max-w-7xl">
+        {/* Header Navigation */}
+        <header className="px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-3">
+              {logo && !logoError ? (
+                <div className="relative h-14 w-16 overflow-hidden rounded-lg">
+                  <Image
+                    src={logo || "/placeholder.svg"}
+                    alt="Logo"
+                    fill
+                    className="object-contain"
+                    onError={handleLogoError}
+                    priority
+                    sizes="32px"
+                  />
+                </div>
+              ) : (
+                <div className="h-8 w-8 rounded-lg bg-white/20"></div>
+              )}
+              <span className="text-xl font-bold text-black dark:text-white">
+                AutoGrid
+              </span>
+            </Link>
 
+            {/* Desktop Navigation */}
+            <nav className="hidden items-center space-x-8 rounded-2xl lg:flex">
+              <Link href="/car-for-sale" className={navLinkClasses}>
+                Listings
+              </Link>
+              <Link href="/cars/valuation" className={navLinkClasses}>
+                Car Valuation
+              </Link>
+              <Link href="/car-financing" className={navLinkClasses}>
+                Car Financing
+              </Link>
+              <Link href="/cars/about-us" className={navLinkClasses}>
+                Vehicle Services
+              </Link>
+            </nav>
+
+            {/* Right Actions */}
+            <div className="flex items-center space-x-4">
+              <div className="hidden items-center space-x-2 lg:flex">
                 {!topSettings.hideFavourite && (
                   <button
                     onClick={navigateToLikedCars}
-                    aria-label="Liked Cars"
-                    className="group relative hidden rounded-xl bg-white/10 p-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20 focus:outline-none md:flex"
+                    className="rounded-lg p-2 text-black transition-colors hover:bg-purple-600 hover:text-white dark:text-white"
                   >
-                    <FaHeart className="h-5 w-5 text-white/90 transition-colors duration-300 group-hover:text-green-400" />
+                    <Heart className="h-4 w-4" />
                   </button>
                 )}
-
                 {!topSettings.hideDarkMode && (
                   <button
                     onClick={toggleDarkMode}
-                    className="group relative rounded-xl bg-white/10 p-3 text-white/90 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/20"
-                    aria-label="Toggle dark mode"
+                    className="rounded-lg p-2 text-black transition-colors hover:bg-purple-600  hover:text-white dark:text-white"
                   >
                     {darkMode ? (
-                      <FaSun className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                      <Sun className="h-4 w-4" />
                     ) : (
-                      <FaMoon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                      <Moon className="h-4 w-4" />
                     )}
                   </button>
                 )}
               </div>
+
+              <button
+                onClick={navigateToLogin}
+                className="hidden items-center rounded-lg border-2 border-purple-600 bg-white px-4 py-2 font-medium text-purple-600 transition-colors hover:bg-purple-600 hover:text-white lg:flex"
+              >
+                Sign Up
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={handleMobileMenuOpen}
+                className="rounded-lg p-2 text-black hover:bg-white/10 dark:text-white lg:hidden"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
             </div>
           </div>
-        </nav>
+        </header>
 
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={heroImage}
-            alt="Premium Vehicle Showcase"
-            fill
-            className="object-cover object-center"
-            priority
-            sizes="100vw"
-            quality={90}
-          />
+        {/* Hero Section */}
+        <div className="px-6">
+          <div className="overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-gray-800">
+            {/* Hero Content */}
+            <div className="relative bg-gradient-to-r from-purple-600 to-purple-800 dark:from-purple-700 dark:to-purple-900">
+              <div className="relative px-8 py-16 lg:px-16 lg:py-20">
+                <div className="flex items-center justify-between">
+                  <div className="max-w-2xl">
+                    <h1 className="mb-6 text-4xl font-bold leading-tight text-white lg:text-5xl">
+                      {homepageData?.searchSection?.mainHeading || ""}
+                    </h1>
 
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/70"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30"></div>
-          <div className="absolute inset-0 bg-gray-900/20 dark:bg-gray-900/40"></div>
-        </div>
+                    {/* Search Form */}
+                    <div className="rounded-2xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm">
+                      {/* Condition Tabs */}
+                      <div className="mb-6 flex space-x-2">
+                        <ConditionTab
+                          condition="all"
+                          label="All Cars"
+                          selected={selectedCondition === "all"}
+                          onClick={() => setSelectedCondition("all")}
+                        />
+                        <ConditionTab
+                          condition="new"
+                          label="New Cars"
+                          selected={selectedCondition === "new"}
+                          onClick={() => setSelectedCondition("new")}
+                        />
+                        <ConditionTab
+                          condition="used"
+                          label="Used Cars"
+                          selected={selectedCondition === "used"}
+                          onClick={() => setSelectedCondition("used")}
+                        />
+                      </div>
 
-        <div className="absolute bottom-10 left-10 h-20 w-20 animate-pulse rounded-full bg-green-500/20 opacity-60 backdrop-blur-sm"></div>
-        <div className="absolute right-20 top-20 h-16 w-16 animate-pulse rounded-full bg-green-400/20 opacity-40 backdrop-blur-sm"></div>
+                      {/* Search Fields */}
+                      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
+                        <div className="relative">
+                          <select
+                            value={selectedMake}
+                            onChange={(e) => setSelectedMake(e.target.value)}
+                            className="w-full appearance-none rounded-lg border border-white/30 bg-white/90 px-4 py-3 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-white"
+                            disabled={carSearchLoading}
+                          >
+                            <option value="">Select Make</option>
+                            {carSearchMakes.map((make, index) => (
+                              <option key={index} value={make}>
+                                {make}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-600" />
+                        </div>
 
-        <div className="z-5 absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(255,255,255)_1px,transparent_0)] bg-[size:50px_50px]"></div>
-        </div>
+                        <div className="relative">
+                          <select
+                            value={selectedModel}
+                            onChange={(e) => setSelectedModel(e.target.value)}
+                            className="w-full appearance-none rounded-lg border border-white/30 bg-white/90 px-4 py-3 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-white disabled:opacity-50"
+                            disabled={!selectedMake || carSearchLoading}
+                          >
+                            <option value="">Select Model</option>
+                            {carSearchModels.map((model, index) => (
+                              <option key={index} value={model}>
+                                {model}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-600" />
+                        </div>
 
-        <div className="absolute inset-0 flex items-center">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-start pr-8">
-              <div className="text-left w-[70vw] md:w-[45vw]">
-                <h1 className="mb-4 text-3xl sm:text-4xl font-bold leading-tight text-white md:text-5xl">
-                  {homepageData?.searchSection?.mainHeading || ""}
-                  <br />
-                </h1>
-              </div>
-            </div>
-          </div>
-        </div>
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            <div
-              className="fixed inset-0 bg-black/50"
-              onClick={handleMobileMenuClose}
-            ></div>
-            <div className="fixed right-0 top-0 h-full w-80 transform bg-white shadow-xl transition-transform duration-300 dark:bg-gray-900">
-              <div className="p-6">
-                <div className="mb-8 flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    Menu
-                  </h2>
-                  <button onClick={handleMobileMenuClose} className="p-2">
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <nav className="space-y-4">
-                  <Link
-                    href="/car-for-sale"
-                    onClick={handleMobileMenuClose}
-                    className="block py-2 text-gray-900 dark:text-white"
-                  >
-                    Cars for Sale
-                  </Link>
-                  <Link
-                    href="/cars/leasing"
-                    onClick={handleMobileMenuClose}
-                    className="block py-2 text-gray-900 dark:text-white"
-                  >
-                    Lease Deals
-                  </Link>
-                  <Link
-                    href="/car-financing"
-                    onClick={handleMobileMenuClose}
-                    className="block py-2 text-gray-900 dark:text-white"
-                  >
-                    Car Financing
-                  </Link>
-                  <Link
-                    href="/about"
-                    onClick={handleMobileMenuClose}
-                    className="block py-2 text-gray-900 dark:text-white"
-                  >
-                    About
-                  </Link>
-                  <Link
-                    href="/contact"
-                    onClick={handleMobileMenuClose}
-                    className="block py-2 text-gray-900 dark:text-white"
-                  >
-                    Contact
-                  </Link>
-                  <Link
-                    href="/blogs"
-                    onClick={handleMobileMenuClose}
-                    className="block py-2 text-gray-900 dark:text-white"
-                  >
-                    Blogs
-                  </Link>
-                  <Link
-                    href="/cars/about-us"
-                    onClick={handleMobileMenuClose}
-                    className="block py-2 text-gray-900 dark:text-white"
-                  >
-                    Vehicle Services
-                  </Link>
-                </nav>
-              </div>
-            </div>
-          </div>
-        )}
-      </section>
+                        <div>
+                          <input
+                            type="text"
+                            placeholder="Enter location"
+                            value={location}
+                            onChange={(e) => setLocation(e.target.value)}
+                            className="w-full rounded-lg border border-white/30 bg-white/90 px-4 py-3 text-gray-900 focus:border-transparent focus:ring-2 focus:ring-white"
+                          />
+                        </div>
 
-      <div className="relative -top-24 mx-auto -mb-24 w-full max-w-6xl px-4">
-        <div
-          className={`rounded-xl shadow-xl ${darkMode ? "bg-gray-800" : "bg-white"}`}
-        >
-          <div className="flex justify-center rounded-t-xl border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-700">
-            <ConditionTab
-              condition="all"
-              label="All Condition"
-              selected={selectedCondition === "all"}
-              onClick={() => setSelectedCondition("all")}
-            />
-            <ConditionTab
-              condition="new"
-              label="New"
-              selected={selectedCondition === "new"}
-              onClick={() => setSelectedCondition("new")}
-            />
-            <ConditionTab
-              condition="used"
-              label="Used"
-              selected={selectedCondition === "used"}
-              onClick={() => setSelectedCondition("used")}
-            />
-          </div>
-          <div className="p-6 dark:bg-gray-700">
-            <div className="grid grid-cols-1 items-end gap-4 md:grid-cols-5">
-              <div className="space-y-2">
-                <label
-                  htmlFor={`${idPrefix}-make`}
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                >
-                  Make
-                </label>
-                <div className="relative">
-                  <select
-                    id={`${idPrefix}-make`}
-                    value={selectedMake}
-                    onChange={(e) => setSelectedMake(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 transition-colors duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                    disabled={carSearchLoading}
-                  >
-                    <option value="">Select Make</option>
-                    {carSearchMakes.map((make, index) => (
-                      <option key={index} value={make}>
-                        {make}
-                      </option>
-                    ))}
-                  </select>
-                  {carSearchLoading && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-green-500 border-t-transparent"></div>
+                        <div>
+                          <input
+                            type="number"
+                            placeholder="Max price"
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(e.target.value)}
+                            className="w-full rounded-lg border border-white/30 bg-white/90 px-4 py-3 text-gray-900 [-moz-appearance:textfield] focus:border-transparent focus:ring-2 focus:ring-white [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Search Actions */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2 text-white/80">
+                          <span className="text-sm">
+                            Featured & promoted Vehicles for your consideration 
+                          </span>
+                        </div>
+
+                        <button
+                          onClick={handleCarSearch}
+                          className="flex items-center space-x-2 rounded-lg bg-purple-500 px-8 py-3 font-medium text-white transition-colors hover:bg-purple-600"
+                        >
+                          <Search className="h-4 w-4" />
+                          <span>Search</span>
+                        </button>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor={`${idPrefix}-model`}
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                >
-                  Model
-                </label>
-                <select
-                  id={`${idPrefix}-model`}
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 transition-colors duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:disabled:bg-gray-600"
-                  disabled={!selectedMake || carSearchLoading}
-                >
-                  <option value="">Select Model</option>
-                  {carSearchModels.map((model, index) => (
-                    <option key={index} value={model}>
-                      {model}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor={`${idPrefix}-price`}
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                >
-                  Max Price
-                </label>
-                <input
-                  id={`${idPrefix}-price`}
-                  type="number"
-                  placeholder="Enter max price"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor={`${idPrefix}-location`}
-                  className="block text-sm font-medium text-gray-700 dark:text-gray-200"
-                >
-                  Location
-                </label>
-                <input
-                  id={`${idPrefix}-location`}
-                  type="text"
-                  placeholder="Enter a location"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full rounded-md border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-500 transition-colors duration-200 focus:border-green-500 focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                />
-              </div>
-
-              <div>
-                <button
-                  onClick={handleCarSearch}
-                  className="flex w-full items-center justify-center rounded-md bg-green-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="mr-2 h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                      clipRule="evenodd"
+                  <div className="relative left-16 top-7 hidden lg:block">
+                    <Image
+                      src="/00085.png"
+                      alt="Car"
+                      width={500}
+                      height={500}
+                      className="object-cover"
                     />
-                  </svg>
-                  <span>Search</span>
-                </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

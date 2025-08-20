@@ -1,178 +1,167 @@
-"use client";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { MdOutlineArrowOutward } from "react-icons/md";
-import { IoSpeedometer } from "react-icons/io5";
-import { GiGasPump } from "react-icons/gi";
-import { TbManualGearbox } from "react-icons/tb";
-import { FaHeart } from "react-icons/fa";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import { useTranslations } from "next-intl";
-import { useCurrency } from "../context/CurrencyContext";
-import { useDistance } from "../context/DistanceContext";
-import { FaRegHeart } from "react-icons/fa6";
-import {
-  ChevronDown,
-  ChevronUp,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+"use client"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { MdOutlineArrowOutward } from "react-icons/md"
+import { IoSpeedometer } from "react-icons/io5"
+import { GiGasPump } from "react-icons/gi"
+import { TbManualGearbox } from "react-icons/tb"
+import { FaHeart } from "react-icons/fa"
+import Skeleton from "react-loading-skeleton"
+import "react-loading-skeleton/dist/skeleton.css"
+import { useTranslations } from "next-intl"
+import { useCurrency } from "../context/CurrencyContext"
+import { useDistance } from "../context/DistanceContext"
+import { FaRegHeart } from "react-icons/fa6"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
-const VehicleCard = ({
-  vehicle,
-  userLikedCars,
-  handleLikeToggle,
-  convertedValues,
-  selectedCurrency,
-  currency,
-}) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = vehicle.imageUrls || [];
-  const hasMultipleImages = images.length > 1;
+const VehicleCard = ({ vehicle, userLikedCars, handleLikeToggle, convertedValues, selectedCurrency, currency }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const images = vehicle.imageUrls || []
+  const hasMultipleImages = images.length > 1
 
   // Automatic image carousel
   useEffect(() => {
-    if (!hasMultipleImages) return;
+    if (!hasMultipleImages) return
 
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 3000); 
-    
-    return () => clearInterval(interval);
-  }, [hasMultipleImages, images.length]);
+      setCurrentImageIndex((prev) => (prev + 1) % images.length)
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [hasMultipleImages, images.length])
 
   const nextImage = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImageIndex((prev) => (prev + 1) % images.length)
+  }
 
   const prevImage = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
+  }
 
   const goToImage = (index, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentImageIndex(index);
-  };
+    e.preventDefault()
+    e.stopPropagation()
+    setCurrentImageIndex(index)
+  }
 
   // Format vehicle title with condition
   const getVehicleTitle = () => {
     const condition = vehicle.condition
-      ? vehicle.condition.charAt(0).toUpperCase() +
-        vehicle.condition.slice(1).toLowerCase()
-      : "";
-    const make = vehicle.make || "";
-    const model = vehicle.model || "";
+      ? vehicle.condition.charAt(0).toUpperCase() + vehicle.condition.slice(1).toLowerCase()
+      : ""
+    const make = vehicle.make || ""
+    const model = vehicle.model || ""
 
     if (condition && condition !== "Default") {
-      return `${condition} ${make} ${model}`.trim();
+      return `${condition} ${make} ${model}`.trim()
     }
-    return `${make} ${model}`.trim();
-  };
+    return `${make} ${model}`.trim()
+  }
 
   return (
     <Link href={`/car-detail/${vehicle.slug || vehicle._id}`}>
-      <div className="group w-full h-full transform cursor-pointer overflow-hidden rounded-lg bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:bg-slate-800 dark:shadow-slate-900/20 flex flex-col">
+      <div className="group relative w-full h-full transform cursor-pointer overflow-hidden rounded-2xl bg-gradient-to-br from-white via-purple-50/30 to-indigo-50/50 shadow-lg border border-purple-100/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/20 dark:from-slate-800 dark:via-purple-900/20 dark:to-indigo-900/30 dark:border-purple-800/30 flex flex-col backdrop-blur-sm">
+        {/* Subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-indigo-500/5 pointer-events-none"></div>
+
         {/* Image Section */}
-        <div className="relative">
-          <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="relative z-10">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
             {hasMultipleImages ? (
-              /* Image Container with Smooth Sliding */
+              /* Restored original carousel implementation with style jsx for proper sliding functionality */
               <div className="carousel-container">
-  <div className="carousel-track">
-    {images.map((image, index) => (
-      <div key={index} className="carousel-item">
-        <Image
-          src={image || "/placeholder.svg"}
-          fill
-          alt={`${getVehicleTitle()} - Image ${index + 1}`}
-          className="object-cover"
-        />
-      </div>
-    ))}
-  </div>
+                <div className="carousel-track">
+                  {images.map((image, index) => (
+                    <div key={index} className="carousel-item">
+                      <Image
+                        src={image || "/placeholder.svg"}
+                        fill
+                        alt={`${getVehicleTitle()} - Image ${index + 1}`}
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                  ))}
+                </div>
 
-  <style jsx>{`
-    .carousel-container {
-      height: 100%;
-      display: flex;
-      overflow: hidden;
-    }
+                <style jsx>{`
+                  .carousel-container {
+                    height: 100%;
+                    display: flex;
+                    overflow: hidden;
+                  }
 
-    .carousel-track {
-      display: flex;
-      height: 100%;
-      transition: transform 0.5s ease-in-out;
-      transform: translateX(-${currentImageIndex * (100 / images.length)}%);
-      width: ${images.length * 100}%;
-    }
+                  .carousel-track {
+                    display: flex;
+                    height: 100%;
+                    transition: transform 0.5s ease-in-out;
+                    transform: translateX(-${currentImageIndex * (100 / images.length)}%);
+                    width: ${images.length * 100}%;
+                  }
 
-    .carousel-item {
-      position: relative;
-      aspect-ratio: 4 / 3;
-      height: 100%;
-      flex-shrink: 0;
-      width: ${100 / images.length}%;
-    }
-  `}</style>
-</div>
-
+                  .carousel-item {
+                    position: relative;
+                    aspect-ratio: 4 / 3;
+                    height: 100%;
+                    flex-shrink: 0;
+                    width: ${100 / images.length}%;
+                  }
+                `}</style>
+              </div>
             ) : (
               /* Single Image Display */
               <Image
                 src={images[0] || "/placeholder.svg"}
                 fill
                 alt={getVehicleTitle()}
-                className="object-cover"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
             )}
 
-            {/* Image Navigation Arrows - Only show on hover */}
+            {/* Image Navigation Arrows - Enhanced styling */}
             {hasMultipleImages && (
               <>
                 <button
                   onClick={prevImage}
-                  className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white opacity-0 backdrop-blur-sm transition-all duration-200 hover:bg-black/80 group-hover:opacity-100"
+                  className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-r from-purple-600/90 to-indigo-600/90 text-white opacity-0 backdrop-blur-md transition-all duration-300 hover:from-purple-700 hover:to-indigo-700 hover:scale-110 group-hover:opacity-100 shadow-lg"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
                   onClick={nextImage}
-                  className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-white opacity-0 backdrop-blur-sm transition-all duration-200 hover:bg-black/80 group-hover:opacity-100"
+                  className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gradient-to-r from-purple-600/90 to-indigo-600/90 text-white opacity-0 backdrop-blur-md transition-all duration-300 hover:from-purple-700 hover:to-indigo-700 hover:scale-110 group-hover:opacity-100 shadow-lg"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-5 w-5" />
                 </button>
               </>
             )}
           </div>
 
-          {/* Image Progress Indicators */}
+          {/* Image Progress Indicators - Enhanced styling */}
           {hasMultipleImages && (
-            <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 space-x-1">
+            <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 space-x-2">
               {images.map((_, index) => (
                 <button
                   key={index}
                   onClick={(e) => goToImage(index, e)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                  className={`h-2 rounded-full transition-all duration-300 shadow-sm ${
                     index === currentImageIndex
-                      ? "w-6 bg-white shadow-md"
-                      : "w-1.5 bg-white/60 hover:bg-white/80"
+                      ? "w-8 bg-gradient-to-r from-purple-500 to-indigo-500 shadow-purple-500/50"
+                      : "w-2 bg-white/70 hover:bg-white/90 backdrop-blur-sm"
                   }`}
                 />
               ))}
             </div>
           )}
 
-          {/* Tag Badge - Keep this one */}
+          {/* Tag Badge - Enhanced styling */}
           {!vehicle.sold && vehicle.tag && vehicle.tag !== "default" && (
-            <div className="absolute right-2 top-2 z-20">
-              <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-medium text-white shadow-lg">
+            <div className="absolute right-3 top-3 z-20">
+              <span className="rounded-full bg-gradient-to-r from-red-500 to-pink-500 px-3 py-1.5 text-xs font-bold text-white shadow-lg backdrop-blur-sm border border-red-400/30">
                 {vehicle.tag.toUpperCase()}
               </span>
             </div>
@@ -180,54 +169,46 @@ const VehicleCard = ({
 
           {vehicle.sold && (
             <div className="absolute left-5 top-20 z-10">
-              <div className="origin-bottom-left -translate-x-6 -translate-y-5 -rotate-45 transform bg-red-500 shadow-lg">
-                <div className="w-32 px-0 py-2 text-center text-xs font-bold text-white">
-                  SOLD
-                </div>
+              <div className="origin-bottom-left -translate-x-6 -translate-y-5 -rotate-45 transform bg-gradient-to-r from-red-500 to-red-600 shadow-xl">
+                <div className="w-32 px-0 py-2 text-center text-xs font-bold text-white">SOLD</div>
               </div>
             </div>
           )}
 
-          {/* Like Button */}
+          {/* Like Button - Enhanced styling */}
           <button
             onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleLikeToggle(vehicle._id);
+              e.preventDefault()
+              e.stopPropagation()
+              handleLikeToggle(vehicle._id)
             }}
-            className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:shadow-xl dark:bg-slate-800/95"
+            className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 dark:bg-slate-800/95 dark:hover:from-purple-900/50 dark:hover:to-indigo-900/50 border border-purple-200/50 dark:border-purple-700/50"
           >
-            {userLikedCars &&
-            Array.isArray(userLikedCars) &&
-            userLikedCars.includes(vehicle._id) ? (
-              <FaHeart className="h-3 w-3 text-red-500" />
+            {userLikedCars && Array.isArray(userLikedCars) && userLikedCars.includes(vehicle._id) ? (
+              <FaHeart className="h-4 w-4 text-red-500 drop-shadow-sm" />
             ) : (
-              <FaRegHeart className="h-3 w-3 text-gray-600 hover:text-red-500" />
+              <FaRegHeart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors duration-200" />
             )}
           </button>
         </div>
 
-        {/* Content Section - Reduced padding */}
-        <div className="p-3 flex-1 flex flex-col">
+        {/* Content Section - Enhanced styling */}
+        <div className="p-4 flex-1 flex flex-col relative z-10">
           {/* Title and Price */}
-          <div className="mb-2 flex items-start justify-between">
+          <div className="mb-3 flex items-start justify-between">
             <div className="flex-1">
-              <h3 className="line-clamp-1 text-base font-bold leading-tight text-gray-800 dark:text-white">
+              <h3 className="line-clamp-1 text-lg font-bold leading-tight bg-gradient-to-r from-gray-800 to-gray-700 bg-clip-text text-transparent dark:from-white dark:to-gray-200">
                 {getVehicleTitle()}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {vehicle.modelYear}
-              </p>
+              <p className="text-sm text-purple-600/70 dark:text-purple-400/70 font-medium">{vehicle.modelYear}</p>
             </div>
-            <div className="ml-2">
-              {/* Green price background without rounding */}
-              <div className="bg-green-600 px-2 py-1 text-right">
-                <div className="text-sm font-bold text-white">
+            <div className="ml-3">
+              {/* Enhanced price styling with gradient */}
+              <div className="bg-gradient-to-r from-green-500 to-emerald-500 px-3 py-2 rounded-lg shadow-lg border border-green-400/30">
+                <div className="text-sm font-bold text-white drop-shadow-sm">
                   {selectedCurrency && selectedCurrency.symbol}{" "}
                   {Math.round(
-                    (vehicle &&
-                      vehicle.price *
-                        ((selectedCurrency && selectedCurrency.value) || 1)) /
+                    (vehicle && vehicle.price * ((selectedCurrency && selectedCurrency.value) || 1)) /
                       ((currency && currency.value) || 1),
                   ).toLocaleString()}
                 </div>
@@ -235,89 +216,78 @@ const VehicleCard = ({
             </div>
           </div>
 
-          {/* Vehicle Stats - Reduced padding and gap */}
-          <div className="grid grid-cols-3 gap-1 text-center mt-auto">
-            <div className="flex flex-col items-center">
-              <div className="mb-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700">
-                <IoSpeedometer className="h-3 w-3 text-gray-600 dark:text-gray-300" />
+          {/* Vehicle Stats - Enhanced styling */}
+          <div className="grid grid-cols-3 gap-2 text-center mt-auto">
+            <div className="flex flex-col items-center p-2 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/30 dark:to-indigo-900/30 border border-purple-100/50 dark:border-purple-800/30">
+              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg">
+                <IoSpeedometer className="h-4 w-4 text-white" />
               </div>
-              <div className="text-xs font-semibold text-gray-800 dark:text-white">
-                {convertedValues.kms}
-              </div>
-              <div className="text-[10px] text-gray-500 dark:text-gray-400">
+              <div className="text-sm font-bold text-gray-800 dark:text-white">{convertedValues.kms}</div>
+              <div className="text-xs text-purple-600/70 dark:text-purple-400/70 font-medium">
                 {convertedValues.unit && convertedValues.unit.toUpperCase()}
               </div>
             </div>
 
-            <div className="flex flex-col items-center">
-              <div className="mb-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700">
-                <GiGasPump className="h-3 w-3 text-gray-600 dark:text-gray-300" />
+            <div className="flex flex-col items-center p-2 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/30 dark:to-indigo-900/30 border border-purple-100/50 dark:border-purple-800/30">
+              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg">
+                <GiGasPump className="h-4 w-4 text-white" />
               </div>
-              <div className="text-xs font-semibold text-gray-800 dark:text-white">
-                {vehicle && vehicle.fuelType}
-              </div>
-              <div className="text-[10px] text-gray-500 dark:text-gray-400">
-                Fuel
-              </div>
+              <div className="text-sm font-bold text-gray-800 dark:text-white">{vehicle && vehicle.fuelType}</div>
+              <div className="text-xs text-purple-600/70 dark:text-purple-400/70 font-medium">Fuel</div>
             </div>
 
-            <div className="flex flex-col items-center">
-              <div className="mb-1 flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700">
-                <TbManualGearbox className="h-3 w-3 text-gray-600 dark:text-gray-300" />
+            <div className="flex flex-col items-center p-2 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/30 dark:to-indigo-900/30 border border-purple-100/50 dark:border-purple-800/30">
+              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg">
+                <TbManualGearbox className="h-4 w-4 text-white" />
               </div>
-              <div className="text-xs font-semibold text-gray-800 dark:text-white">
-                {vehicle && vehicle.gearbox}
-              </div>
-              <div className="text-[10px] text-gray-500 dark:text-gray-400">
-                Trans
-              </div>
+              <div className="text-sm font-bold text-gray-800 dark:text-white">{vehicle && vehicle.gearbox}</div>
+              <div className="text-xs text-purple-600/70 dark:text-purple-400/70 font-medium">Trans</div>
             </div>
           </div>
         </div>
       </div>
     </Link>
-  );
-};
+  )
+}
 
 const VehicalsList = ({ loadingState }) => {
-  const t = useTranslations("HomePage");
-  const [vehicles, setVehicles] = useState([]);
-  const [filteredVehicles, setFilteredVehicles] = useState([]);
-  const [loading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { currency, selectedCurrency } = useCurrency();
-  const { distance: defaultUnit, loading: distanceLoading } = useDistance();
-  const [userLikedCars, setUserLikedCars] = useState([]);
-  const [user, setUser] = useState(null);
-  const [visibleVehiclesCount, setVisibleVehiclesCount] = useState(6);
-  const [listingData, setListingData] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("all");
+  const t = useTranslations("HomePage")
+  const [vehicles, setVehicles] = useState([])
+  const [filteredVehicles, setFilteredVehicles] = useState([])
+  const [loading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const { currency, selectedCurrency } = useCurrency()
+  const { distance: defaultUnit, loading: distanceLoading } = useDistance()
+  const [userLikedCars, setUserLikedCars] = useState([])
+  const [user, setUser] = useState(null)
+  const [listingData, setListingData] = useState(null)
+  const [activeFilter, setActiveFilter] = useState("all")
 
   useEffect(() => {
     const fetchListingData = async () => {
       try {
-        const response = await fetch("/api/homepage");
-        const result = await response.json();
+        const response = await fetch("/api/homepage")
+        const result = await response.json()
         if (response.ok) {
-          setListingData(result?.listingSection);
+          setListingData(result?.listingSection)
         }
       } catch (error) {
-        console.error("Error fetching listing data:", error);
+        console.error("Error fetching listing data:", error)
       }
-    };
-    fetchListingData();
-  }, []);
+    }
+    fetchListingData()
+  }, [])
 
   // Conversion functions with decimal precision
   const convertKmToMiles = (km) => {
-    const numericKm = Number.parseFloat(km);
-    return isNaN(numericKm) ? km : (numericKm * 0.621371).toFixed(1);
-  };
+    const numericKm = Number.parseFloat(km)
+    return isNaN(numericKm) ? km : (numericKm * 0.621371).toFixed(1)
+  }
 
   const convertMilesToKm = (miles) => {
-    const numericMiles = Number.parseFloat(miles);
-    return isNaN(numericMiles) ? miles : (numericMiles * 1.60934).toFixed(1);
-  };
+    const numericMiles = Number.parseFloat(miles)
+    return isNaN(numericMiles) ? miles : (numericMiles * 1.60934).toFixed(1)
+  }
 
   // Function to convert car values based on default unit
   const getConvertedValues = (vehicle) => {
@@ -326,62 +296,58 @@ const VehicalsList = ({ loadingState }) => {
         kms: vehicle.kms,
         mileage: vehicle.mileage,
         unit: vehicle.unit || defaultUnit,
-      };
+      }
     }
     if (vehicle.unit === defaultUnit) {
       return {
         kms: vehicle.kms,
         mileage: vehicle.mileage,
         unit: vehicle.unit,
-      };
+      }
     }
-    let convertedKms = vehicle.kms;
-    let convertedMileage = vehicle.mileage;
+    let convertedKms = vehicle.kms
+    let convertedMileage = vehicle.mileage
     if (vehicle.unit === "km" && defaultUnit === "miles") {
-      convertedKms = convertKmToMiles(vehicle.kms);
-      convertedMileage = convertKmToMiles(vehicle.mileage);
+      convertedKms = convertKmToMiles(vehicle.kms)
+      convertedMileage = convertKmToMiles(vehicle.mileage)
     } else if (vehicle.unit === "miles" && defaultUnit === "km") {
-      convertedKms = convertMilesToKm(vehicle.kms);
-      convertedMileage = convertMilesToKm(vehicle.mileage);
+      convertedKms = convertMilesToKm(vehicle.kms)
+      convertedMileage = convertMilesToKm(vehicle.mileage)
     }
     return {
       kms: convertedKms,
       mileage: convertedMileage,
       unit: defaultUnit,
-    };
-  };
+    }
+  }
 
   const fetchVehicles = async () => {
     try {
-      const response = await fetch("/api/cars");
-      if (!response.ok) throw new Error("Failed to fetch vehicles");
-      const data = await response.json();
-      const filteredCars = data.cars.filter(
-        (car) => car.status === 1 || car.status === "1",
-      );
-      setVehicles(filteredCars);
-      setFilteredVehicles(filteredCars);
-      setIsLoading(false);
+      const response = await fetch("/api/cars")
+      if (!response.ok) throw new Error("Failed to fetch vehicles")
+      const data = await response.json()
+      const filteredCars = data.cars.filter((car) => car.status === 1 || car.status === "1")
+      setVehicles(filteredCars)
+      setFilteredVehicles(filteredCars)
+      setIsLoading(false)
     } catch (err) {
-      setError(err.message);
-      setIsLoading(false);
+      setError(err.message)
+      setIsLoading(false)
     }
-  };
+  }
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch("/api/users/me");
+      const response = await fetch("/api/users/me")
       if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-        setUserLikedCars(
-          Array.isArray(data.user?.likedCars) ? data.user.likedCars : [],
-        );
+        const data = await response.json()
+        setUser(data.user)
+        setUserLikedCars(Array.isArray(data.user?.likedCars) ? data.user.likedCars : [])
       }
     } catch (error) {
-      return;
+      return
     }
-  };
+  }
 
   const handleLikeToggle = async (carId) => {
     try {
@@ -391,57 +357,42 @@ const VehicalsList = ({ loadingState }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ carId }),
-      });
+      })
       if (response.ok) {
-        const data = await response.json();
-        setUserLikedCars(Array.isArray(data.likedCars) ? data.likedCars : []);
+        const data = await response.json()
+        setUserLikedCars(Array.isArray(data.likedCars) ? data.likedCars : [])
         setUser((prev) => ({
           ...prev,
           likedCars: data.likedCars,
-        }));
+        }))
       } else {
-        console.error("Failed to update liked cars");
+        console.error("Failed to update liked cars")
       }
     } catch (error) {
-      console.error("Error updating liked cars:", error);
+      console.error("Error updating liked cars:", error)
     }
-  };
-
-  const handleToggleVisibility = () => {
-    if (visibleVehiclesCount >= filteredVehicles.length) {
-      setVisibleVehiclesCount(3);
-    } else {
-      setVisibleVehiclesCount((prevCount) =>
-        Math.min(prevCount + 3, filteredVehicles.length),
-      );
-    }
-  };
+  }
 
   const handleFilterChange = (filterType) => {
-    setActiveFilter(filterType);
-    setVisibleVehiclesCount(6); // Reset visible count when filtering
+    setActiveFilter(filterType)
 
     if (filterType === "all") {
-      setFilteredVehicles(vehicles);
+      setFilteredVehicles(vehicles)
     } else {
       const filtered = vehicles.filter((vehicle) => {
         if (filterType === "for-sale") {
-          return !vehicle.sold;
+          return !vehicle.sold
         }
-        return (
-          !vehicle.sold &&
-          vehicle.tag &&
-          vehicle.tag.toLowerCase() === filterType.toLowerCase()
-        );
-      });
-      setFilteredVehicles(filtered);
+        return !vehicle.sold && vehicle.tag && vehicle.tag.toLowerCase() === filterType.toLowerCase()
+      })
+      setFilteredVehicles(filtered)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchVehicles();
-    fetchUserData();
-  }, []);
+    fetchVehicles()
+    fetchUserData()
+  }, [])
 
   if (error) {
     return (
@@ -455,74 +406,82 @@ const VehicalsList = ({ loadingState }) => {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   if (listingData && listingData.status === "inactive") {
-    return null;
+    return null
   }
 
+  const displayVehicles = filteredVehicles.slice(0, 5)
+  const featuredVehicle = displayVehicles[0]
+  const smallVehicles = displayVehicles.slice(1, 5)
+
   return (
-    <section className="my-7 rounded-xl bg-slate-50 py-7 dark:bg-slate-900 sm:mx-8 md:my-10 md:py-10">
-      <div className="mb-10">
+    <section className="my-10 rounded-3xl bg-gradient-to-br from-white via-purple-50/50 to-indigo-50/30 py-12 shadow-xl border border-purple-100/50 dark:from-slate-900 dark:via-purple-900/20 dark:to-indigo-900/20 dark:border-purple-800/30 backdrop-blur-sm relative overflow-hidden sm:mx-8 md:my-16 md:py-16">
+      {/* Background gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-indigo-500/5 pointer-events-none"></div>
+
+      <div className="mb-12 relative z-10">
         {/* Header with title and filters */}
-        <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+        <div className="mb-10 flex flex-col items-start justify-between gap-6 px-6 md:flex-row md:items-center md:px-8">
           {/* Title Section */}
           <div className="flex-1">
-            <h2 className="text-3xl font-bold leading-tight text-gray-800 dark:text-white md:text-4xl">
+            <h2 className="text-4xl font-bold leading-tight bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 bg-clip-text text-transparent md:text-5xl drop-shadow-sm">
               {listingData && listingData.heading}
             </h2>
+            <div className="mt-2 h-1 w-20 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"></div>
           </div>
 
-          {/* View All Button - Top Right */}
+          {/* View All Button - Enhanced styling */}
           <div className="flex items-center gap-4">
             <Link href={"/car-for-sale"}>
-              <div className="group inline-flex transform items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 shadow-sm transition-all duration-300 hover:bg-gray-50 hover:text-gray-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+              <div className="group inline-flex transform items-center gap-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-3 font-bold text-white shadow-xl transition-all duration-300 hover:from-purple-700 hover:to-indigo-700 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/30 border border-purple-500/30">
                 <span>{t("viewAll")}</span>
-                <MdOutlineArrowOutward className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <MdOutlineArrowOutward className="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1" />
               </div>
             </Link>
           </div>
         </div>
 
-        {/* Filter Tabs - Professional Rectangular Style */}
-        <div className="mb-8 flex flex-wrap gap-1">
+        {/* Filter Tabs - Enhanced styling with gradients */}
+        <div className="mb-10 flex flex-wrap gap-2 px-6 md:px-8">
           <button
             onClick={() => handleFilterChange("all")}
-            className={`px-4 py-2 text-sm font-medium transition-all duration-200 ${
+            className={`px-6 py-3 text-sm font-bold rounded-2xl transition-all duration-300 shadow-lg ${
               activeFilter === "all"
-                ? "bg-gray-800 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/30 scale-105"
+                : "bg-white/90 text-gray-900 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 hover:text-purple-700 dark:bg-slate-800/90 dark:text-white dark:hover:bg-gradient-to-r dark:hover:from-purple-900/50 dark:hover:to-indigo-900/50 border border-purple-200/50 dark:border-purple-700/50"
             }`}
           >
             All Cars
           </button>
           <button
             onClick={() => handleFilterChange("for-sale")}
-            className={`px-4 py-2 text-sm font-medium transition-all duration-200 ${
+            className={`px-6 py-3 text-sm font-bold rounded-2xl transition-all duration-300 shadow-lg ${
               activeFilter === "for-sale"
-                ? "bg-gray-800 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/30 scale-105"
+                : "bg-white/90 text-gray-900 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 hover:text-purple-700 dark:bg-slate-800/90 dark:text-white dark:hover:bg-gradient-to-r dark:hover:from-purple-900/50 dark:hover:to-indigo-900/50 border border-purple-200/50 dark:border-purple-700/50"
             }`}
           >
             For Sale
           </button>
           <button
             onClick={() => handleFilterChange("featured")}
-            className={`px-4 py-2 text-sm font-medium transition-all duration-200 ${
+            className={`px-6 py-3 text-sm font-bold rounded-2xl transition-all duration-300 shadow-lg ${
               activeFilter === "featured"
-                ? "bg-gray-800 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/30 scale-105"
+                : "bg-white/90 text-gray-900 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 hover:text-purple-700 dark:bg-slate-800/90 dark:text-white dark:hover:bg-gradient-to-r dark:hover:from-purple-900/50 dark:hover:to-indigo-900/50 border border-purple-200/50 dark:border-purple-700/50"
             }`}
           >
             Featured
           </button>
           <button
             onClick={() => handleFilterChange("promotion")}
-            className={`px-4 py-2 text-sm font-medium transition-all duration-200 ${
+            className={`px-6 py-3 text-sm font-bold rounded-2xl transition-all duration-300 shadow-lg ${
               activeFilter === "promotion"
-                ? "bg-gray-800 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/30 scale-105"
+                : "bg-white/90 text-gray-900 hover:bg-gradient-to-r hover:from-purple-50 hover:to-indigo-50 hover:text-purple-700 dark:bg-slate-800/90 dark:text-white dark:hover:bg-gradient-to-r dark:hover:from-purple-900/50 dark:hover:to-indigo-900/50 border border-purple-200/50 dark:border-purple-700/50"
             }`}
           >
             Promotion
@@ -530,76 +489,56 @@ const VehicalsList = ({ loadingState }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 sm:px-8 md:grid-cols-3 lg:gap-8">
-        {loading
-          ? Array(3)
-              .fill()
-              .map((_, index) => (
-                <div
-                  className="overflow-hidden rounded-lg border border-slate-100 bg-white shadow-md dark:border-slate-700 dark:bg-slate-800"
-                  key={index}
-                >
-                  <div className="relative">
-                    <Skeleton className="h-32 w-full" />
+      {loading ? (
+        <div className="px-6 sm:px-8 relative z-10">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className="overflow-hidden rounded-2xl bg-gradient-to-br from-white to-purple-50/50 shadow-lg border border-purple-100/50 dark:from-slate-800 dark:to-purple-900/20 dark:border-purple-800/30"
+              >
+                <Skeleton className="h-48 w-full" />
+                <div className="space-y-4 p-4">
+                  <div className="flex items-start justify-between">
+                    <Skeleton height={24} width="60%" />
+                    <Skeleton height={32} width="30%" />
                   </div>
-                  <div className="space-y-3 p-3">
-                    <div className="flex items-start justify-between">
-                      <Skeleton height={20} width="60%" />
-                      <Skeleton height={24} width="30%" />
-                    </div>
-                    <div className="grid grid-cols-3 gap-1">
-                      {[...Array(3)].map((_, i) => (
-                        <div key={i} className="flex flex-col items-center">
-                          <Skeleton circle width={24} height={24} />
-                          <Skeleton height={12} width="80%" className="mt-1" />
-                          <Skeleton height={10} width="60%" className="mt-1" />
-                        </div>
-                      ))}
-                    </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[...Array(3)].map((_, i) => (
+                      <div key={i} className="flex flex-col items-center p-2 rounded-xl bg-purple-50/50">
+                        <Skeleton circle width={32} height={32} />
+                        <Skeleton height={16} width="80%" className="mt-2" />
+                        <Skeleton height={12} width="60%" className="mt-1" />
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))
-          : filteredVehicles.slice(0, visibleVehiclesCount).map((vehicle) => {
-              const convertedValues = getConvertedValues(vehicle);
-              return (
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : displayVehicles.length > 0 ? (
+        <div className="px-6 sm:px-8 relative z-10">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {displayVehicles.map((vehicle) => (
+              <div key={vehicle._id} className="h-full">
                 <VehicleCard
-                  key={vehicle._id}
                   vehicle={vehicle}
                   userLikedCars={userLikedCars}
                   handleLikeToggle={handleLikeToggle}
-                  convertedValues={convertedValues}
+                  convertedValues={getConvertedValues(vehicle)}
                   selectedCurrency={selectedCurrency}
                   currency={currency}
                 />
-              );
-            })}
-      </div>
-
-      {!loading && filteredVehicles.length > 3 && (
-        <div className="mt-10 text-center">
-          <button
-            onClick={handleToggleVisibility}
-            className="group inline-flex transform items-center gap-3 rounded-lg bg-gray-800 px-6 py-3 font-medium text-white shadow-md transition-all duration-300 hover:bg-gray-700"
-          >
-            <span>
-              {visibleVehiclesCount >= filteredVehicles.length
-                ? "Show less"
-                : "Show more"}
-            </span>
-            {visibleVehiclesCount >= filteredVehicles.length ? (
-              <ChevronUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5" />
-            ) : (
-              <ChevronDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-            )}
-          </button>
+              </div>
+            ))}
+          </div>
         </div>
-      )}
-
-      {filteredVehicles.length === 0 && !loading && (
-        <div className="py-20 text-center">
-          <div className="mx-auto mb-8 flex h-32 w-32 items-center justify-center rounded-full bg-slate-50 shadow-inner dark:bg-slate-800">
+      ) : (
+        <div className="py-24 text-center relative z-10">
+          <div className="mx-auto mb-8 flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-indigo-100 shadow-xl dark:from-purple-900/30 dark:to-indigo-900/30 border border-purple-200/50 dark:border-purple-700/50">
             <svg
-              className="h-16 w-16 text-slate-400"
+              className="h-20 w-20 text-purple-400 dark:text-purple-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -612,7 +551,7 @@ const VehicalsList = ({ loadingState }) => {
               />
             </svg>
           </div>
-          <h3 className="mb-4 text-2xl font-bold text-gray-800 dark:text-white">
+          <h3 className="mb-6 text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
             {activeFilter === "all"
               ? "No Vehicles Available"
               : `No ${activeFilter === "for-sale" ? "Cars For Sale" : activeFilter.charAt(0).toUpperCase() + activeFilter.slice(1) + " Cars"} Available`}
@@ -625,7 +564,7 @@ const VehicalsList = ({ loadingState }) => {
         </div>
       )}
     </section>
-  );
-};
+  )
+}
 
-export default VehicalsList;
+export default VehicalsList
