@@ -3,60 +3,57 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  FaHeart,
   FaTimes,
   FaCalculator,
   FaHandshake,
   FaCar,
-  FaSun,
-  FaMoon,
-  FaTags,
   FaUser,
 } from "react-icons/fa";
+import { Heart, Sun, Moon, Menu, ChevronDown } from "lucide-react";
 import { useSidebar } from "../context/SidebarContext";
 import Image from "next/image";
-import Banner from "./Banner"
+import Banner from "./Banner";
 
 const CACHE_DURATION = 5 * 60 * 1000;
-const CACHE_KEY = 'header_settings';
+const CACHE_KEY = "header_settings";
 
 const CacheManager = {
   get: (key) => {
     try {
-      if (typeof window === 'undefined') return null;
-      
+      if (typeof window === "undefined") return null;
+
       const cached = localStorage.getItem(key);
       if (!cached) return null;
-      
+
       const { data, timestamp } = JSON.parse(cached);
       const now = Date.now();
-      
+
       if (now - timestamp > CACHE_DURATION) {
         localStorage.removeItem(key);
         return null;
       }
-      
+
       return data;
     } catch (error) {
-      console.warn('Cache retrieval failed:', error);
+      console.warn("Cache retrieval failed:", error);
       return null;
     }
   },
 
   set: (key, data) => {
     try {
-      if (typeof window === 'undefined') return;
-      
+      if (typeof window === "undefined") return;
+
       const cacheData = {
         data,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
-      
+
       localStorage.setItem(key, JSON.stringify(cacheData));
     } catch (error) {
-      console.warn('Cache storage failed:', error);
+      console.warn("Cache storage failed:", error);
     }
-  }
+  },
 };
 
 // Static fallback data to prevent loading states
@@ -77,34 +74,47 @@ const Header = () => {
   const router = useRouter();
   const mountedRef = useRef(true);
   const [listingsDropdownOpen, setListingsDropdownOpen] = useState(false);
-const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
-const [isVisible, setIsVisible] = useState(true);
+  const [pagesDropdownOpen, setPagesDropdownOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [scrollY, setScrollY] = useState(0);
-  
 
   const { toggleSidebar } = useSidebar();
 
-  const quickLinks = useMemo(() => [
-    { name: "Find Cars", href: "/car-for-sale", icon: FaCar },
-    { name: "Car valuation", href: "/cars/valuation", icon: FaCalculator },
-    { name: "Car Financing", href: "/car-financing", icon: FaCalculator },
-    { name: "Lease deals", href: "/cars/leasing", icon: FaTags },
-    { name: "Vehicle Services", href: "/cars/about-us", icon: FaHandshake },
-  ], []);
+  const quickLinks = useMemo(
+    () => [
+      { name: "Car Valuation", href: "/cars/valuation", icon: FaCalculator },
+      { name: "Car Financing", href: "/car-financing", icon: FaCalculator },
+      { name: "Vehicle Services", href: "/cars/about-us", icon: FaHandshake },
+    ],
+    [],
+  );
 
-  const mobileMenuLinks = useMemo(() => [
-    ...quickLinks,
-    { name: "Login", href: "/login", icon: FaUser },
-  ], [quickLinks]);
+  const mobileLinks = useMemo(
+    () => [
+      { name: "Cars for Sale", href: "/car-for-sale", icon: FaCar },
+      { name: "Lease Deals", href: "/cars/leasing", icon: FaCar },
+      { name: "Car Valuation", href: "/cars/valuation", icon: FaCalculator },
+      { name: "Car Financing", href: "/car-financing", icon: FaCalculator },
+      { name: "Vehicle Services", href: "/cars/about-us", icon: FaHandshake },
+    ],
+    [],
+  );
+
+  const mobileMenuLinks = useMemo(
+    () => [...quickLinks, { name: "Login", href: "/login", icon: FaUser }],
+    [quickLinks],
+  );
 
   useEffect(() => {
     // Check localStorage first for faster initialization
-    const savedTheme = localStorage.getItem('theme');
-    const isDark = savedTheme === 'dark' || 
-      (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
+    const savedTheme = localStorage.getItem("theme");
+    const isDark =
+      savedTheme === "dark" ||
+      (!savedTheme &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+
     setDarkMode(isDark);
-    
+
     // Apply immediately to prevent flash
     if (isDark) {
       document.documentElement.classList.add("dark");
@@ -117,22 +127,22 @@ const [isVisible, setIsVisible] = useState(true);
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-      
+
       // Calculate hero section height (87vh)
       const heroHeight = window.innerHeight * 0.87;
       const scrollThreshold = heroHeight * 0.2; // 20% of hero section
-      
+
       setIsVisible(currentScrollY > scrollThreshold);
     };
 
     // Add scroll listener
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     // Check initial scroll position
     handleScroll();
 
     // Cleanup
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Enhanced settings fetch with cache integration
@@ -141,7 +151,7 @@ const [isVisible, setIsVisible] = useState(true);
 
     try {
       setIsLoading(true);
-      
+
       // Check cache first
       const cachedData = CacheManager.get(CACHE_KEY);
       if (cachedData) {
@@ -161,7 +171,7 @@ const [isVisible, setIsVisible] = useState(true);
       });
 
       if (!response.ok) {
-        throw new Error('Settings fetch failed');
+        throw new Error("Settings fetch failed");
       }
 
       const data = await response.json();
@@ -176,16 +186,15 @@ const [isVisible, setIsVisible] = useState(true);
         settings: {
           ...DEFAULT_SETTINGS,
           ...data?.settings?.top,
-        }
+        },
       };
 
       setLogo(updates.logo);
       setTopSettings(updates.settings);
       setIsSettingsLoaded(true);
-      
     } catch (error) {
       console.error("Failed to fetch settings:", error);
-      
+
       // Try to use stale cache as fallback
       const staleCache = localStorage.getItem(CACHE_KEY);
       if (staleCache) {
@@ -199,10 +208,10 @@ const [isVisible, setIsVisible] = useState(true);
             });
           }
         } catch (parseError) {
-          console.warn('Failed to parse stale cache data:', parseError);
+          console.warn("Failed to parse stale cache data:", parseError);
         }
       }
-      
+
       // Silently fall back to defaults
       setIsSettingsLoaded(true);
     } finally {
@@ -212,13 +221,17 @@ const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     mountedRef.current = true;
-    
+
     // Use requestIdleCallback for non-critical settings
-    const scheduleTask = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
-    const taskId = scheduleTask(() => {
-      fetchSettings();
-    }, { timeout: 3000 });
-    
+    const scheduleTask =
+      window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+    const taskId = scheduleTask(
+      () => {
+        fetchSettings();
+      },
+      { timeout: 3000 },
+    );
+
     return () => {
       mountedRef.current = false;
       if (window.cancelIdleCallback) {
@@ -233,10 +246,10 @@ const [isVisible, setIsVisible] = useState(true);
   const toggleDarkMode = useCallback(() => {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
-    
+
     // Persist preference
-    localStorage.setItem('theme', newDarkMode ? 'dark' : 'light');
-    
+    localStorage.setItem("theme", newDarkMode ? "dark" : "light");
+
     // Apply immediately
     if (newDarkMode) {
       document.documentElement.classList.add("dark");
@@ -271,15 +284,18 @@ const [isVisible, setIsVisible] = useState(true);
   }, []);
 
   // Optimized skeleton without animations to prevent CLS
-  const LogoSkeleton = useMemo(() => (
-   <div className="flex items-center space-x-3 custom-box">
-      <div className="h-12 w-12 rounded-lg bg-gray-200 dark:bg-gray-700"></div>
-      <div className="flex flex-col space-y-1">
-        <div className="h-4 w-20 rounded bg-gray-200 dark:bg-gray-700"></div>
-        <div className="h-3 w-24 rounded bg-gray-200 dark:bg-gray-700"></div>
+  const LogoSkeleton = useMemo(
+    () => (
+      <div className="custom-box flex items-center space-x-3">
+        <div className="h-12 w-12 rounded-lg bg-gray-200 dark:bg-gray-700"></div>
+        <div className="flex flex-col space-y-1">
+          <div className="h-4 w-20 rounded bg-gray-200 dark:bg-gray-700"></div>
+          <div className="h-3 w-24 rounded bg-gray-200 dark:bg-gray-700"></div>
+        </div>
       </div>
-    </div>
-  ), []);
+    ),
+    [],
+  );
 
   // Memoized logo component with fixed dimensions
   const LogoComponent = useMemo(() => {
@@ -293,7 +309,7 @@ const [isVisible, setIsVisible] = useState(true);
           <span className="bg-gradient-to-r from-gray-800 via-green-600 to-gray-800 bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-white dark:via-green-400 dark:to-white">
             WindScreen
           </span>
-          <span className="text-xs font-medium text-gray-600 group-hover:text-green-600 transition-colors duration-300 dark:text-gray-400 dark:group-hover:text-green-400">
+          <span className="text-xs font-medium text-gray-600 transition-colors duration-300 group-hover:text-green-600 dark:text-gray-400 dark:group-hover:text-green-400">
             Built to Sell Cars
           </span>
         </div>
@@ -301,13 +317,13 @@ const [isVisible, setIsVisible] = useState(true);
     );
 
     return (
-      <Link href="/" className="flex items-center space-x-3 group">
-      <div className="custom-flex-box">
+      <Link href="/" className="group flex items-center space-x-3">
+        <div className="custom-flex-box">
           {logo && !logoError ? (
             <>
-             <div className="custom-size-box">
+              <div className="custom-size-box">
                 <Image
-                  src={logo}
+                  src={logo || "/placeholder.svg"}
                   alt="Logo"
                   fill
                   className="object-contain"
@@ -318,117 +334,69 @@ const [isVisible, setIsVisible] = useState(true);
               </div>
               {/* {logoContent} */}
             </>
-          ) : (
-           null
-          )}
+          ) : null}
         </div>
       </Link>
     );
-  }, [topSettings.hideLogo, isSettingsLoaded, logo, logoError, LogoSkeleton, handleLogoError]);
+  }, [
+    topSettings.hideLogo,
+    isSettingsLoaded,
+    logo,
+    logoError,
+    LogoSkeleton,
+    handleLogoError,
+  ]);
 
   return (
     <>
-    <Banner/>
-      <nav 
-      className={`fixed left-0 right-0 top-16 z-20 bg-white shadow-lg backdrop-blur-lg transition-all duration-300 border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700 ${
-          isVisible 
-            ? 'translate-y-0 opacity-100' 
-            : '-translate-y-full opacity-0'
+      <Banner />
+      <nav
+        className={`fixed left-0 right-0 top-16 z-20 border-b border-gray-200 bg-white shadow-lg backdrop-blur-lg transition-all duration-300 dark:border-gray-700 dark:bg-gray-900 ${
+          isVisible
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-full opacity-0"
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-4">
           <div className="flex h-16 items-center justify-between">
             {LogoComponent}
-            
+
             <div className="hidden items-center space-x-6 lg:flex">
               {/* Listings Dropdown */}
-              <div 
-                className="relative group"
-                onMouseEnter={() => setListingsDropdownOpen(true)}
-                onMouseLeave={() => setListingsDropdownOpen(false)}
-              >
-                <button className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-300 hover:bg-gradient-to-r hover:from-green-500 hover:to-green-600 hover:text-white hover:shadow-lg hover:shadow-green-500/25 active:scale-95 dark:text-gray-300 dark:hover:text-white">
+              <div className="group relative">
+                <button className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--text)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg active:scale-95">
+                  <FaCar className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                   <span>Listings</span>
-                  <svg className={`h-4 w-4 transition-transform duration-300 ${listingsDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
+                  <ChevronDown className="h-4 w-4" />
                 </button>
-                
-                {listingsDropdownOpen && (
-                  <div 
-                    className="absolute top-full left-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700 z-50"
-                    onMouseEnter={() => setListingsDropdownOpen(true)}
-                    onMouseLeave={() => setListingsDropdownOpen(false)}
+
+                <div
+                  className="invisible absolute left-0 top-full z-50 mt-2 w-48 rounded-lg border border-[var(--text-secondary)] bg-[var(--bg)] opacity-0 shadow-lg transition-all duration-200 
+                  group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100"
+                >
+                  <Link
+                    href="/car-for-sale"
+                    className="block rounded-t-lg px-4 py-3 text-[var(--text)] hover:bg-[var(--primary)] hover:text-white"
                   >
-                    <div className="py-2">
-                      <Link
-                        href="/car-for-sale"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-green-400 transition-colors duration-200"
-                      >
-                        Cars for Sale
-                      </Link>
-                      <Link
-                        href="/cars/leasing"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-green-400 transition-colors duration-200"
-                      >
-                        Lease Deals
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                    Cars for Sale
+                  </Link>
+                  <Link
+                    href="/cars/leasing"
+                    className="block rounded-b-lg px-4 py-3 text-[var(--text)] hover:bg-[var(--primary)] hover:text-white"
+                  >
+                    Lease Deals
+                  </Link>
+                </div>
               </div>
 
-              {/* Pages Dropdown */}
-              <div 
-                className="relative group"
-                onMouseEnter={() => setPagesDropdownOpen(true)}
-                onMouseLeave={() => setPagesDropdownOpen(false)}
-              >
-                <button className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-300 hover:bg-gradient-to-r hover:from-green-500 hover:to-green-600 hover:text-white hover:shadow-lg hover:shadow-green-500/25 active:scale-95 dark:text-gray-300 dark:hover:text-white">
-                  <span>Pages</span>
-                  <svg className={`h-4 w-4 transition-transform duration-300 ${pagesDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                
-                {pagesDropdownOpen && (
-                  <div 
-                    className="absolute top-full left-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700 z-50"
-                    onMouseEnter={() => setPagesDropdownOpen(true)}
-                    onMouseLeave={() => setPagesDropdownOpen(false)}
-                  >
-                    <div className="py-2">
-                      <Link
-                        href="/about"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-green-400 transition-colors duration-200"
-                      >
-                        About
-                      </Link>
-                      <Link
-                        href="/contact"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-green-400 transition-colors duration-200"
-                      >
-                        Contact
-                      </Link>
-                      <Link
-                        href="/blogs"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-green-400 transition-colors duration-200"
-                      >
-                        Blogs
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Keep existing Car Valuation and Vehicle Services */}
-              {quickLinks.filter(link => link.name === 'Car valuation' || link.name === 'Vehicle Services' || link.name === 'Car Financing').map((link, index) => {
+              {/* Other Links */}
+              {quickLinks.map((link, index) => {
                 const IconComponent = link.icon;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 transition-all duration-300 hover:bg-gradient-to-r hover:from-green-500 hover:to-green-600 hover:text-white hover:shadow-lg hover:shadow-green-500/25 active:scale-95 dark:text-gray-300 dark:hover:text-white"
+                    className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--text)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg active:scale-95"
                   >
                     <IconComponent className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                     <span>{link.name}</span>
@@ -436,74 +404,63 @@ const [isVisible, setIsVisible] = useState(true);
                 );
               })}
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <button
                 onClick={navigateToLogin}
-                aria-label="Login"
-                className={`hidden items-center space-x-2 rounded-xl bg-gray-100 px-4 py-3 text-gray-600 transition-all duration-300 hover:scale-105 hover:bg-gray-200 hover:text-green-600 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-green-600 lg:flex ${isLoading ? 'opacity-75' : 'opacity-100'}`}
+                aria-label="Sign Up"
+                className={`focus:ring-[var(--primary)]/50 hidden items-center space-x-2 rounded-lg border-2 border-[var(--primary)] bg-[var(--bg)] px-4 py-2.5 text-sm font-medium text-[var(--primary)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 lg:flex ${isLoading ? "opacity-75" : "opacity-100"}`}
               >
-                <FaUser className="h-5 w-5" />
-                <span className="text-sm font-medium">Login</span>
+                <FaUser className="h-4 w-4" />
+                <span>Sign Up</span>
               </button>
+
               {/* Mobile Menu Toggle (Hamburger) - Visible on smaller screens */}
               <button
                 onClick={handleMobileMenuOpen}
                 aria-label="Open Menu"
-                className="group relative rounded-xl bg-gray-100 p-3 transition-all duration-300 hover:scale-105 hover:bg-gradient-to-br hover:from-green-500 hover:to-green-600 hover:shadow-lg hover:shadow-green-500/25 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2 focus:ring-offset-white lg:hidden dark:bg-gray-800 dark:focus:ring-offset-gray-900"
+                className="focus:ring-[var(--primary)]/50 group relative rounded-lg bg-[var(--bg-secondary)] p-3 transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 lg:hidden"
               >
-                <svg
-                  className="h-5 w-5 text-gray-700 transition-colors duration-300 group-hover:text-white dark:text-gray-300"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
+                <Menu className="h-5 w-5 text-[var(--text)] transition-colors duration-300 group-hover:text-[var(--text-inverse)]" />
               </button>
 
               {!topSettings.hideFavourite && (
                 <button
                   onClick={navigateToLikedCars}
                   aria-label="Liked Cars"
-                  className={`group relative hidden rounded-xl bg-gray-100 p-3 transition-all duration-300 hover:scale-105 hover:bg-gradient-to-br hover:from-green-500 hover:to-green-600 hover:shadow-lg hover:shadow-green-500/25 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:ring-offset-2 focus:ring-offset-white md:flex dark:bg-gray-800 dark:focus:ring-offset-gray-900 ${isLoading ? 'opacity-75' : 'opacity-100'}`}
+                  className={`focus:ring-[var(--primary)]/50 group relative hidden rounded-lg bg-[var(--bg-secondary)] p-3 transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 md:flex ${isLoading ? "opacity-75" : "opacity-100"}`}
                 >
-                  <FaHeart className="h-5 w-5 text-gray-700 transition-colors duration-300 group-hover:text-white dark:text-gray-300" />
+                  <Heart className="h-5 w-5 text-[var(--text)] transition-colors duration-300 group-hover:text-[var(--text-inverse)]" />
                 </button>
               )}
-              
+
               <div className="hidden items-center space-x-3 md:flex">
                 {!topSettings.hideDarkMode && (
                   <button
                     onClick={toggleDarkMode}
-                    className={`group relative rounded-xl bg-gray-100 p-3 text-gray-700 ring-1 ring-gray-200 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-gradient-to-br hover:from-green-500 hover:to-green-600 hover:ring-green-500/50 hover:shadow-lg hover:shadow-green-500/25 hover:text-white dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700 ${isLoading ? 'opacity-75' : 'opacity-100'}`}
+                    className={`hover:ring-[var(--primary)]/50 group relative rounded-lg bg-[var(--bg-secondary)] p-3 text-[var(--text)] backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg ${isLoading ? "opacity-75" : "opacity-100"}`}
                     aria-label="Toggle dark mode"
                   >
                     {darkMode ? (
-                      <FaSun className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                      <Sun className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                     ) : (
-                      <FaMoon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                      <Moon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                     )}
                   </button>
                 )}
               </div>
-              
+
               <div className="flex items-center space-x-3 md:hidden">
                 {!topSettings.hideDarkMode && (
                   <button
                     onClick={toggleDarkMode}
-                    className={`group rounded-xl bg-gray-100 p-3 text-gray-700 ring-1 ring-gray-200 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-gradient-to-br hover:from-green-500 hover:to-green-600 hover:ring-green-500/50 hover:text-white dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-700 ${isLoading ? 'opacity-75' : 'opacity-100'}`}
+                    className={`hover:ring-[var(--primary)]/50 group rounded-lg bg-[var(--bg-secondary)] p-3 text-[var(--text)] ring-1 ring-[var(--text-secondary)] backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] ${isLoading ? "opacity-75" : "opacity-100"}`}
                     aria-label="Toggle dark mode"
                   >
                     {darkMode ? (
-                      <FaSun className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                      <Sun className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                     ) : (
-                      <FaMoon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                      <Moon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                     )}
                   </button>
                 )}
@@ -514,89 +471,41 @@ const [isVisible, setIsVisible] = useState(true);
       </nav>
 
       {/* Mobile Quick Links Menu Overlay */}
-     {isMobileMenuOpen && (
-  <div
-    className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm custom-transform"
-    onClick={handleMobileMenuClose}
-  />
-)}
+      {isMobileMenuOpen && (
+        <div
+          className="custom-transform fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+          onClick={handleMobileMenuClose}
+        />
+      )}
 
-      
-      {/* Mobile Quick Links Menu */}
       <div
-  className={`fixed left-0 top-0 z-[60] h-full w-full max-w-xs transform overflow-y-auto bg-white shadow-2xl dark:bg-gray-900 scrollbar-hide lg:hidden border-r border-gray-200 dark:border-gray-700 custom-mobile-menu ${
-    isMobileMenuOpen ? "open" : "closed"
-  }`}
->
+        className={`scrollbar-hide custom-mobile-menu fixed left-0 top-0 z-[60] h-full w-full max-w-xs transform overflow-y-auto border-r border-[var(--text-secondary)] bg-[var(--bg)] shadow-2xl lg:hidden ${
+          isMobileMenuOpen ? "open" : "closed"
+        }`}
+      >
         <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white p-4 dark:border-gray-700 dark:from-gray-800 dark:to-gray-900">
-            <h2 className="bg-gradient-to-r from-gray-800 via-green-600 to-gray-800 bg-clip-text text-lg font-semibold text-transparent dark:from-white dark:via-green-400 dark:to-gray-200">
+          <div className="flex items-center justify-between border-b border-[var(--text-secondary)] bg-[var(--bg-secondary)] p-4">
+            <h2 className="text-lg font-semibold text-[var(--text)]">
               Quick Links
             </h2>
             <button
               onClick={handleMobileMenuClose}
               aria-label="Close Menu"
-              className="rounded-lg p-2 text-gray-600 transition-all duration-300 hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 hover:text-green-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500/50 dark:text-gray-400 dark:hover:from-green-900/20 dark:hover:to-green-800/20 dark:hover:text-green-400"
+              className="focus:ring-[var(--primary)]/50 rounded-lg p-2 text-[var(--text-secondary)] transition-all duration-300 hover:scale-105 hover:bg-[var(--primary-light)] hover:text-[var(--primary)] focus:outline-none focus:ring-2"
             >
               <FaTimes className="h-4 w-4" />
             </button>
           </div>
-          
+
           <div className="flex-1 space-y-2 p-4">
-            {/* Mobile Listings Section */}
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">Listings</h3>
-              <Link
-                href="/car-for-sale"
-                onClick={handleMobileMenuClose}
-                className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-green-500"
-              >
-                <span>Cars for Sale</span>
-              </Link>
-              <Link
-                href="/cars/leasing"
-                onClick={handleMobileMenuClose}
-                className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-green-500"
-              >
-                <span>Lease Deals</span>
-              </Link>
-            </div>
-
-            {/* Mobile Pages Section */}
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">Pages</h3>
-              <Link
-                href="/about"
-                onClick={handleMobileMenuClose}
-                className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-green-500"
-              >
-                <span>About</span>
-              </Link>
-              <Link
-                href="/contact"
-                onClick={handleMobileMenuClose}
-                className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-green-500"
-              >
-                <span>Contact</span>
-              </Link>
-              <Link
-                href="/blogs"
-                onClick={handleMobileMenuClose}
-                className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-green-500"
-              >
-                <span>Blogs</span>
-              </Link>
-            </div>
-
-            {/* Keep existing Car Valuation and Vehicle Services in mobile */}
-            {mobileMenuLinks.filter(link => link.name === 'Car valuation' || link.name === 'Vehicle Services').map((link) => {
+            {mobileLinks.map((link) => {
               const IconComponent = link.icon;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={handleMobileMenuClose}
-                  className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-green-600 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-green-500"
+                  className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-[var(--text)] transition-all duration-200 hover:bg-[var(--bg-secondary)] hover:text-[var(--primary)]"
                 >
                   <IconComponent className="h-5 w-5" />
                   <span>{link.name}</span>
@@ -604,10 +513,10 @@ const [isVisible, setIsVisible] = useState(true);
               );
             })}
           </div>
-          
-          <div className="border-t border-gray-200 p-4 dark:border-gray-700">
+
+          <div className="border-t border-[var(--text-secondary)] p-4">
             <div className="text-center">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-[var(--text-secondary)]">
                 Professional Car Services
               </p>
             </div>

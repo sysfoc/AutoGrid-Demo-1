@@ -22,6 +22,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { useCurrency } from "../context/CurrencyContext";
 import { useDistance } from "../context/DistanceContext";
+import { Check } from "lucide-react";
 
 const CardetailCard = () => {
   const [cars, setCars] = useState([]);
@@ -659,17 +660,17 @@ const CardetailCard = () => {
   if (loading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
-        <div className="flex items-center space-x-4 rounded-2xl bg-gray-50 border border-gray-200 px-8 py-6 shadow-md">
+        <div className="flex items-center space-x-4 rounded-2xl bg-white px-8 py-6 shadow-sm">
           <Spinner
             aria-label="Loading vehicles"
             size="lg"
-            className="text-orange-500"
+            className="text-purple-600"
           />
           <div>
-            <span className="text-lg font-semibold text-gray-900">
+            <span className="text-lg font-semibold text-gray-900 dark:text-white">
               Loading vehicles...
             </span>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-100">
               Please wait while we fetch the latest listings
             </p>
           </div>
@@ -681,7 +682,7 @@ const CardetailCard = () => {
   if (!sortedAndFilteredCars.length) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center p-8 text-center">
-        <div className="max-w-md rounded-2xl bg-gray-50 border border-gray-200 p-8 shadow-md">
+        <div className="max-w-md rounded-2xl bg-white p-8 shadow-sm">
           <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
             <svg
               className="h-10 w-10 text-gray-400"
@@ -697,10 +698,10 @@ const CardetailCard = () => {
               />
             </svg>
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">
+          <h3 className="mb-3 text-xl font-bold text-gray-900 dark:text-white">
             No vehicles found
           </h3>
-          <p className="mb-6 text-gray-500">
+          <p className="mb-6 text-gray-500 dark:text-gray-100">
             We could not find any vehicles matching your current filters. Try
             adjusting your search criteria or clearing some filters.
           </p>
@@ -709,17 +710,17 @@ const CardetailCard = () => {
     );
   }
 
-  return (
+return (
     <>
       <div className="mb-6">
-        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-md dark:border-gray-600 dark:bg-gray-800 dark:shadow-gray-700/10 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-[var(--bg)] p-4 shadow-sm dark:border-gray-700 dark:bg-gray-700 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-              <span className="font-semibold text-gray-900 dark:text-white">
+            <span className="text-sm font-medium text-[var(--text-secondary)]">
+              <span className="font-semibold text-[var(--text)]">
                 {paginationData.startIndex + 1}-{paginationData.endIndex}
               </span>{" "}
               of{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="font-semibold text-[var(--text)]">
                 {paginationData.totalItems}
               </span>{" "}
               vehicles
@@ -728,7 +729,7 @@ const CardetailCard = () => {
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Select
-              className="min-w-[120px] text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="min-w-[120px] border-gray-300 bg-[var(--bg)] text-sm text-[var(--text)] dark:border-gray-600 dark:bg-gray-700 dark:text-[var(--text)]"
               value={itemsPerPage}
               onChange={(e) => {
                 setItemsPerPage(Number.parseInt(e.target.value));
@@ -743,7 +744,7 @@ const CardetailCard = () => {
 
             <Select
               icon={GrSort}
-              className="min-w-[160px] text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              className="min-w-[160px] border-gray-300 bg-[var(--bg)] text-sm text-[var(--text)] dark:border-gray-600 dark:bg-gray-700 dark:text-[var(--text)]"
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
             >
@@ -756,13 +757,13 @@ const CardetailCard = () => {
               <option value="mileage-hl">{t("mileageHighToLow")}</option>
             </Select>
 
-            <div className="flex rounded-lg border border-gray-200 bg-white p-1 dark:border-gray-600 dark:bg-gray-700">
+            <div className="flex rounded-lg border border-gray-200 bg-[var(--bg)] p-1 dark:border-gray-600 dark:bg-gray-700">
               <button
                 onClick={() => setIsGridView(false)}
                 className={`rounded p-2 transition-colors ${
                   !isGridView
-                    ? "bg-orange-500 text-white"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    ? "bg-[var(--primary)] text-[var(--text-inverse)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text)]"
                 }`}
               >
                 <FiList size={16} />
@@ -771,8 +772,8 @@ const CardetailCard = () => {
                 onClick={() => setIsGridView(true)}
                 className={`rounded p-2 transition-colors ${
                   isGridView
-                    ? "bg-orange-500 text-white"
-                    : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    ? "bg-[var(--primary)] text-[var(--text-inverse)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text)]"
                 }`}
               >
                 <FiGrid size={16} />
@@ -783,7 +784,7 @@ const CardetailCard = () => {
       </div>
 
       <div
-        className={`rounded-lg bg-gray-100 p-6 transition-opacity duration-200 dark:bg-gray-900 ${isPageTransitioning ? "opacity-50" : "opacity-100"} ${
+        className={`transition-opacity duration-200 ${isPageTransitioning ? "opacity-50" : "opacity-100"} ${
           isGridView
             ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
             : "space-y-6"
@@ -793,7 +794,7 @@ const CardetailCard = () => {
           <div key={car._id} className="group">
             <Link href={`car-detail/${car.slug}`}>
               <div
-                className={`overflow-hidden rounded-lg border border-gray-200 bg-gray-50 shadow-md transition-all duration-300 hover:shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:shadow-gray-700/10 dark:hover:shadow-gray-700/20 ${
+                className={`h-full overflow-hidden rounded-lg border border-gray-200 bg-[var(--bg-secondary)] shadow-sm transition-all duration-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-700 dark:hover:shadow-lg ${
                   isGridView ? "flex flex-col" : "flex flex-col sm:flex-row"
                 }`}
               >
@@ -831,11 +832,11 @@ const CardetailCard = () => {
                         </div>
                       ))
                     ) : (
-                      <div className="flex h-full items-center justify-center bg-gray-100 dark:bg-gray-700">
+                      <div className="flex h-full items-center justify-center bg-[var(--bg-secondary)]">
                         <div className="text-center">
-                          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-600">
+                          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--bg)]">
                             <svg
-                              className="h-8 w-8 text-gray-400 dark:text-gray-300"
+                              className="h-8 w-8 text-[var(--text-secondary)]"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -848,7 +849,7 @@ const CardetailCard = () => {
                               />
                             </svg>
                           </div>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                          <span className="text-sm text-[var(--text-secondary)]">
                             No images available
                           </span>
                         </div>
@@ -859,8 +860,8 @@ const CardetailCard = () => {
                   {/* Featured banner */}
                   {!car.sold && (
                     <div className="absolute left-0 top-0">
-                      <div className="bg-orange-500 px-3 py-1 text-xs font-bold text-white">
-                        Featured
+                      <div className="bg-[var(--primary)] px-3 py-1 text-xs font-bold text-gray-100">
+                        {car?.tag.toUpperCase()}
                       </div>
                     </div>
                   )}
@@ -868,7 +869,7 @@ const CardetailCard = () => {
                   {/* Sold banner */}
                   {car.sold && (
                     <div className="absolute left-0 top-0">
-                      <div className="bg-red-500 px-3 py-1 text-xs font-bold text-white">
+                      <div className="bg-red-500 px-3 py-1 text-xs font-bold text-gray-100">
                         SOLD
                       </div>
                     </div>
@@ -878,7 +879,7 @@ const CardetailCard = () => {
                   <div className="absolute right-3 top-3 flex items-center gap-2">
                     {Array.isArray(car.imageUrls) &&
                       car.imageUrls.length > 1 && (
-                        <div className="flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-xs text-white dark:bg-black/80">
+                        <div className="flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-xs text-[var(--text-inverse)]">
                           <svg
                             className="h-3 w-3"
                             fill="currentColor"
@@ -899,14 +900,14 @@ const CardetailCard = () => {
                         e.preventDefault();
                         handleLikeToggle(car._id);
                       }}
-                      className="rounded-full bg-white p-2 shadow-sm transition-colors hover:bg-gray-50 dark:bg-gray-800 dark:shadow-gray-700/20 dark:hover:bg-gray-700"
+                      className="rounded-full bg-[var(--bg)] p-2 shadow-sm transition-colors hover:bg-[var(--bg-secondary)]"
                     >
                       {userLikedCars &&
                       Array.isArray(userLikedCars) &&
                       userLikedCars.includes(car._id) ? (
                         <FaHeart className="h-4 w-4 text-red-500" />
                       ) : (
-                        <FaRegHeart className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                        <FaRegHeart className="h-4 w-4 text-[var(--text-secondary)]" />
                       )}
                     </button>
                   </div>
@@ -921,7 +922,7 @@ const CardetailCard = () => {
                   >
                     <div className="flex-1">
                       <h3
-                        className={`font-bold text-gray-900 dark:text-white ${
+                        className={`font-bold text-[var(--text)] ${
                           isGridView ? "text-lg" : "text-xl"
                         }`}
                       >
@@ -931,17 +932,11 @@ const CardetailCard = () => {
                           `${car.make || "Unknown"} ${car.model || "Unknown"}`
                         )}
                       </h3>
-
-                      {!isGridView && car.features?.length > 0 && (
-                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                          {car.features.join(" • ")}
-                        </p>
-                      )}
                     </div>
 
                     <div className={`text-right ${!isGridView ? "ml-4" : ""}`}>
                       <div
-                        className={`font-bold text-orange-500 dark:text-orange-400 ${isGridView ? "text-xl" : "text-2xl"}`}
+                        className={`font-bold text-[var(--primary)] ${isGridView ? "text-xl" : "text-2xl"}`}
                       >
                         {loading ? (
                           <Skeleton height={28} width={100} />
@@ -952,18 +947,33 @@ const CardetailCard = () => {
                     </div>
                   </div>
 
+                  {/* Features */}
+                  {!isGridView && car.features?.length > 0 && (
+                    <div className="mb-2 grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
+                      {car.features.slice(0, 6).map((feature, idx) => (
+                        <span
+                          key={idx}
+                          className="flex items-center gap-1.5 text-xs text-[var(--text-secondary)]"
+                        >
+                          <Check className="h-3 w-3 flex-shrink-0 text-[var(--primary)]" />
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   <div
-                    className={`flex flex-wrap gap-2 ${isGridView ? "mb-4" : "mb-6"}`}
+                    className="flex flex-wrap items-start gap-2 mb-3"
                   >
-                    <span className="rounded bg-orange-500 px-2 py-1 text-xs font-medium text-white dark:bg-orange-600">
-                      {car.year || car.modelYear || "N/A"}
+                    <span className="rounded bg-[var(--primary)] dark:text-gray-100 px-2 py-1 text-xs font-medium text-[var(--text-inverse)]">
+                      {car.year || car.modelYear || ""}
                     </span>
-                    <div className="flex flex-wrap items-center text-sm text-gray-600 dark:text-gray-300">
+                    <div className="flex flex-col md:flex-[0.8] min-w-0 text-sm text-[var(--text-secondary)]">
                       {[
                         !isGridView &&
                           (() => {
                             const v = getConvertedValues(car);
-                            return `${v.kms || "N/A"} ${v.unit || ""}`;
+                            return `${v.kms || ""} ${v.unit || ""}`;
                           })(),
                         car.gearbox,
                         car.fuelType,
@@ -972,18 +982,15 @@ const CardetailCard = () => {
                         .filter(Boolean)
                         .join(" • ")}
                     </div>
+                    {!isGridView && (
+                      <div className="w-full sm:w-auto sm:flex-shrink-0 text-sm text-[var(--text-secondary)]">
+                        <span className="text-sm text-[var(--text-secondary)]">
+                          <span className="text-[var(--primary)]">Location:</span>{" "}
+                          {car.location || "Not specified"}
+                        </span>
+                      </div>
+                    )}
                   </div>
-
-                  {!isGridView && (
-                    <div className="mb-4">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        <span className="text-orange-500 dark:text-orange-400">
-                          Location:
-                        </span>{" "}
-                        {car.location || "Not specified"}
-                      </span>
-                    </div>
-                  )}
 
                   {/* Action button */}
                   <div className="mt-auto">
@@ -994,8 +1001,8 @@ const CardetailCard = () => {
                         setSelectedCar(car);
                         setOpenModal(true);
                       }}
-                      className={`w-fit rounded-lg bg-orange-500 px-2 font-medium text-white transition-colors hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-500 ${
-                        isGridView ? "py-2 text-sm" : "py-3"
+                      className={`w-fit rounded-lg bg-[var(--primary)] dark:text-gray-100 px-3 font-medium text-[var(--text-inverse)] transition-colors hover:bg-[var(--primary-hover)] ${
+                        isGridView ? "py-2 text-sm" : "py-2"
                       }`}
                     >
                       {t("enquireNow")}
@@ -1011,17 +1018,17 @@ const CardetailCard = () => {
       {paginationData.totalPages > 1 && (
         <div className="mt-12 flex flex-col items-center gap-6">
           <div className="text-center">
-            <p className="text-sm text-gray-600 dark:text-gray-300">
+            <p className="text-sm text-[var(--text-secondary)]">
               Showing{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="font-semibold text-[var(--text)]">
                 {paginationData.startIndex + 1}
               </span>{" "}
               to{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="font-semibold text-[var(--text)]">
                 {paginationData.endIndex}
               </span>{" "}
               of{" "}
-              <span className="font-semibold text-gray-900 dark:text-white">
+              <span className="font-semibold text-[var(--text)]">
                 {paginationData.totalItems}
               </span>{" "}
               results
@@ -1034,8 +1041,8 @@ const CardetailCard = () => {
               disabled={!paginationData.hasPrevPage || isPageTransitioning}
               className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 paginationData.hasPrevPage && !isPageTransitioning
-                  ? "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-                  : "cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-500"
+                  ? "border border-gray-300 bg-[var(--bg)] text-[var(--text)] hover:bg-[var(--bg-secondary)] dark:border-gray-600 dark:bg-gray-700 dark:text-[var(--text)] dark:hover:bg-[var(--bg)]"
+                  : "cursor-not-allowed border border-gray-200 bg-[var(--bg-secondary)] text-[var(--text-secondary)] dark:border-gray-700 dark:bg-[var(--bg)] dark:text-[var(--text-secondary)]"
               }`}
             >
               <svg
@@ -1058,7 +1065,7 @@ const CardetailCard = () => {
               {getVisiblePageNumbers().map((pageNum, index) => (
                 <div key={index}>
                   {pageNum === "..." ? (
-                    <span className="px-3 py-2 text-gray-500 dark:text-gray-400">
+                    <span className="px-3 py-2 text-[var(--text-secondary)]">
                       ...
                     </span>
                   ) : (
@@ -1067,8 +1074,8 @@ const CardetailCard = () => {
                       disabled={isPageTransitioning}
                       className={`min-w-[40px] rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                         currentPage === pageNum
-                          ? "bg-orange-500 text-white dark:bg-orange-600"
-                          : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                          ? "bg-[var(--primary)] text-[var(--text-inverse)]"
+                          : "border border-gray-300 bg-[var(--bg)] text-[var(--text)] hover:bg-[var(--bg-secondary)] dark:border-gray-600 dark:bg-gray-700 dark:text-[var(--text)] dark:hover:bg-[var(--bg)]"
                       } ${isPageTransitioning ? "cursor-not-allowed opacity-50" : ""}`}
                     >
                       {pageNum}
@@ -1083,8 +1090,8 @@ const CardetailCard = () => {
               disabled={!paginationData.hasNextPage || isPageTransitioning}
               className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                 paginationData.hasNextPage && !isPageTransitioning
-                  ? "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-                  : "cursor-not-allowed border border-gray-200 bg-gray-100 text-gray-400 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-500"
+                  ? "border border-gray-300 bg-[var(--bg)] text-[var(--text)] hover:bg-[var(--bg-secondary)] dark:border-gray-600 dark:bg-gray-700 dark:text-[var(--text)] dark:hover:bg-[var(--bg)]"
+                  : "cursor-not-allowed border border-gray-200 bg-[var(--bg-secondary)] text-[var(--text-secondary)] dark:border-gray-700 dark:bg-[var(--bg)] dark:text-[var(--text-secondary)]"
               }`}
             >
               Next
@@ -1106,7 +1113,7 @@ const CardetailCard = () => {
 
           {paginationData.totalPages > 10 && (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-sm text-[var(--text-secondary)]">
                 Jump to page:
               </span>
               <input
@@ -1120,17 +1127,16 @@ const CardetailCard = () => {
                     handlePageChange(page);
                   }
                 }}
-                className="w-16 rounded-lg border border-gray-300 bg-white px-2 py-1 text-center text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                className="w-16 rounded-lg border border-gray-300 bg-[var(--bg)] px-2 py-1 text-center text-sm text-[var(--text)] dark:border-gray-600 dark:bg-gray-700 dark:text-[var(--text)]"
                 disabled={isPageTransitioning}
               />
-              <span className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-sm text-[var(--text-secondary)]">
                 of {paginationData.totalPages}
               </span>
             </div>
           )}
         </div>
       )}
-
       {/* Enquiry Modal */}
       <Modal
         dismissible
@@ -1139,8 +1145,8 @@ const CardetailCard = () => {
         className="backdrop-blur-sm"
       >
         <ModalHeader className="border-b border-gray-200 pb-4">
-          <h3 className="text-2xl font-bold text-gray-900">Get in Touch</h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <h3 className="text-2xl font-bold text-[var(--text)]">Get in Touch</h3>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
             We will get back to you within 24 hours
           </p>
         </ModalHeader>
@@ -1150,7 +1156,7 @@ const CardetailCard = () => {
               <div
                 className={`rounded-lg p-4 text-sm ${
                   submitMessage.includes("success")
-                    ? "border border-green-200 bg-green-50 text-green-800"
+                    ? "text-[var(--primary)]"
                     : "border border-red-200 bg-red-50 text-red-800"
                 }`}
               >
@@ -1161,7 +1167,7 @@ const CardetailCard = () => {
               <div className="space-y-2">
                 <Label
                   htmlFor="firstName"
-                  className="text-sm font-semibold text-gray-700"
+                  className="text-sm font-semibold text-[var(--text)]"
                 >
                   First Name *
                 </Label>
@@ -1171,7 +1177,7 @@ const CardetailCard = () => {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   placeholder="Enter your first name"
-                  className="rounded-lg border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                  className="rounded-lg border-gray-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]"
                   required
                   disabled={isSubmitting}
                 />
@@ -1179,7 +1185,7 @@ const CardetailCard = () => {
               <div className="space-y-2">
                 <Label
                   htmlFor="lastName"
-                  className="text-sm font-semibold text-gray-700"
+                  className="text-sm font-semibold text-[var(--text)]"
                 >
                   Last Name *
                 </Label>
@@ -1189,7 +1195,7 @@ const CardetailCard = () => {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   placeholder="Enter your last name"
-                  className="rounded-lg border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                  className="rounded-lg border-gray-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]"
                   required
                   disabled={isSubmitting}
                 />
@@ -1197,7 +1203,7 @@ const CardetailCard = () => {
               <div className="space-y-2">
                 <Label
                   htmlFor="email"
-                  className="text-sm font-semibold text-gray-700"
+                  className="text-sm font-semibold text-[var(--text)]"
                 >
                   Email Address *
                 </Label>
@@ -1207,7 +1213,7 @@ const CardetailCard = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="your.email@example.com"
-                  className="rounded-lg border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                  className="rounded-lg border-gray-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]"
                   required
                   disabled={isSubmitting}
                 />
@@ -1215,7 +1221,7 @@ const CardetailCard = () => {
               <div className="space-y-2">
                 <Label
                   htmlFor="phone"
-                  className="text-sm font-semibold text-gray-700"
+                  className="text-sm font-semibold text-[var(--text)]"
                 >
                   Phone Number *
                 </Label>
@@ -1225,7 +1231,7 @@ const CardetailCard = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   placeholder="+92 300 1234567"
-                  className="rounded-lg border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                  className="rounded-lg border-gray-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]"
                   required
                   disabled={isSubmitting}
                 />
@@ -1233,7 +1239,7 @@ const CardetailCard = () => {
               <div className="space-y-2 sm:col-span-2">
                 <Label
                   htmlFor="message"
-                  className="text-sm font-semibold text-gray-700"
+                  className="text-sm font-semibold text-[var(--text)]"
                 >
                   Your Message
                 </Label>
@@ -1243,7 +1249,7 @@ const CardetailCard = () => {
                   onChange={handleInputChange}
                   rows={4}
                   placeholder="Tell us about your requirements, budget, or any specific questions..."
-                  className="resize-none rounded-lg border-gray-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+                  className="resize-none rounded-lg border-gray-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]"
                   disabled={isSubmitting}
                 />
               </div>
@@ -1252,10 +1258,10 @@ const CardetailCard = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full rounded-lg py-4 text-lg font-semibold text-white transition-colors ${
+                className={`w-full rounded-lg py-4 text-lg font-semibold text-[var(--text-inverse)] transition-colors ${
                   isSubmitting
                     ? "cursor-not-allowed bg-gray-400"
-                    : "bg-orange-500 hover:bg-orange-600"
+                    : "bg-[var(--primary)] hover:bg-[var(--primary-hover)]"
                 }`}
               >
                 {isSubmitting ? (
@@ -1274,5 +1280,4 @@ const CardetailCard = () => {
     </>
   );
 };
-
 export default CardetailCard;

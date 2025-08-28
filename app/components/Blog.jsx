@@ -48,7 +48,7 @@ const Blog = () => {
     return (
       <section className="relative py-8">
         <div className="container mx-auto px-4 text-center">
-          <div className="inline-block rounded-2xl bg-gradient-to-br from-red-50 to-red-100 border border-red-200 p-6 shadow-lg dark:from-red-900/20 dark:to-red-800/20 dark:border-red-800/30">
+          <div className="inline-block rounded-2xl bg-red-50 border border-red-200 p-6 shadow-lg dark:bg-red-900/20 dark:border-red-800/30">
             <h3 className="mb-2 text-xl font-bold text-red-800 dark:text-red-200">Error Loading Blogs</h3>
             <p className="text-red-700 dark:text-red-300">{error}</p>
           </div>
@@ -58,12 +58,12 @@ const Blog = () => {
   }
 
   return (
-    <section className="py-8 bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-indigo-900/20">
+    <section className="py-8 bg-background dark:bg-background-dark">
       <div className="container mx-auto px-4">
         <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 md:text-4xl">{t("blogHeading")}</h2>
+          <h2 className="text-3xl font-bold text-text dark:text-text-inverse mb-4 md:text-4xl">{t("blogHeading")}</h2>
           <Link href={"/blogs"} className="group inline-flex">
-            <div className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 font-medium text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105">
+            <div className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-medium text-text-inverse shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-primary-hover">
               <span>{t("viewAll")}</span>
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
             </div>
@@ -73,8 +73,8 @@ const Blog = () => {
         {loading && (
           <div className="flex justify-center py-8">
             <div className="relative">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-200 border-t-purple-600 dark:border-purple-800 dark:border-t-purple-400"></div>
-              <div className="absolute inset-0 h-12 w-12 animate-ping rounded-full border-4 border-purple-300 opacity-20"></div>
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary dark:border-gray-700 dark:border-t-primary"></div>
+              <div className="absolute inset-0 h-12 w-12 animate-ping rounded-full border-4 border-primary/30 opacity-20"></div>
             </div>
           </div>
         )}
@@ -84,9 +84,9 @@ const Blog = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(showAll ? blogs : blogs.slice(0, INITIAL_DISPLAY_COUNT)).map((blog) => (
                 <Link href={`/blog/${blog.slug}`} key={blog.slug}>
-                  <article className="group relative h-full overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20 hover:-translate-y-2 dark:bg-gray-800 border border-purple-100 dark:border-purple-800/30 flex flex-col">
+                  <article className="group relative h-full overflow-hidden rounded-xl bg-background shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:-translate-y-2 dark:bg-background-dark border border-gray-200 dark:border-gray-700 flex flex-col">
                     {/* Image */}
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                    <div className="relative aspect-[16/9] overflow-hidden">
                       <Image
                         src={blog.image || "/sydney.jpg"}
                         alt={blog.metaTitle || blog.h1 || "Blog post"}
@@ -100,18 +100,18 @@ const Blog = () => {
                     {/* Content */}
                     <div className="p-6 flex-1 flex flex-col">
                       <div className="mb-4 flex-1">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 leading-tight group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
+                        <h3 className="text-lg font-bold line-clamp-2 text-text dark:text-text-inverse mb-3 leading-tight group-hover:text-primary transition-colors">
                           {blog.h1 || blog.metaTitle}
                         </h3>
                         {blog.metaDescription && (
-                          <p className="text-gray-700 dark:text-gray-300 line-clamp-3 leading-relaxed text-sm">
+                          <p className="text-text-secondary dark:text-text-inverse leading-relaxed text-sm line-clamp-2">
                             {blog.metaDescription}
                           </p>
                         )}
                       </div>
 
                       {/* Date */}
-                      <div className="mb-4 flex items-center text-sm text-purple-700 dark:text-purple-400 font-medium">
+                      <div className="mb-4 flex items-center text-sm text-primary font-medium">
                         <Calendar className="mr-2 h-4 w-4" />
                         <time dateTime={blog.createdAt}>
                           {new Date(blog.createdAt).toLocaleDateString("en-US", {
@@ -123,23 +123,23 @@ const Blog = () => {
                       </div>
 
                       {/* Stats */}
-                      <div className="flex items-center justify-between border-t border-purple-100 dark:border-purple-800/30 pt-4">
+                      <div className="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 pt-4">
                         <div className="flex space-x-4 text-sm">
-                          <div className="flex items-center bg-purple-50 dark:bg-purple-900/30 px-3 py-1 rounded-full">
-                            <MessageCircle className="mr-1 h-4 w-4 text-purple-700 dark:text-purple-400" />
-                            <span className="font-semibold text-purple-800 dark:text-purple-300">
+                          <div className="flex items-center bg-primary-light dark:bg-primary-light/20 px-3 py-1 rounded-full">
+                            <MessageCircle className="mr-1 h-4 w-4 text-primary dark:text-gray-100" />
+                            <span className="font-semibold text-primary dark:text-gray-100">
                               {formatCount(blog.comments?.length || 0)}
                             </span>
                           </div>
-                          <div className="flex items-center bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
-                            <Eye className="mr-1 h-4 w-4 text-indigo-700 dark:text-indigo-400" />
-                            <span className="font-semibold text-indigo-800 dark:text-indigo-300">
+                          <div className="flex items-center bg-background-secondary dark:bg-primary-light/20 px-3 py-1 rounded-full">
+                            <Eye className="mr-1 h-4 w-4 text-text-secondary dark:text-gray-100" />
+                            <span className="font-semibold text-text-secondary dark:text-gray-100">
                               {formatCount(getUniqueViewsCount(blog.views))}
                             </span>
                           </div>
                         </div>
 
-                        <div className="flex items-center text-sm font-bold text-purple-700 dark:text-purple-400 group-hover:text-purple-800 dark:group-hover:text-purple-300 transition-colors">
+                        <div className="flex items-center text-sm font-bold text-primary group-hover:text-primary-hover transition-colors">
                           Read more
                           <ArrowUpRight className="ml-1 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                         </div>
@@ -154,7 +154,7 @@ const Blog = () => {
               <div className="flex justify-center pt-4">
                 <button
                   onClick={() => setShowAll(!showAll)}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 font-medium text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+                  className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 font-medium text-text-inverse shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:bg-primary-hover"
                 >
                   <span>{showAll ? "Show Less" : `Show More (${blogs.length - INITIAL_DISPLAY_COUNT})`}</span>
                   {showAll ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -166,8 +166,8 @@ const Blog = () => {
 
         {!loading && blogs.length === 0 && (
           <div className="py-8 text-center">
-            <div className="mx-auto max-w-lg rounded-3xl bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 p-6 shadow-2xl dark:from-purple-900/20 dark:to-indigo-900/20 dark:border-purple-800/30">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-lg">
+            <div className="mx-auto max-w-lg rounded-3xl bg-primary-light border border-gray-200 p-6 shadow-2xl dark:bg-primary-light/20 dark:border-gray-700">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-text-inverse shadow-lg">
                 <svg
                   className="h-8 w-8"
                   fill="none"
@@ -183,8 +183,8 @@ const Blog = () => {
                   />
                 </svg>
               </div>
-              <h3 className="mb-3 text-2xl font-bold text-purple-800 dark:text-purple-200">No Blogs Available</h3>
-              <p className="text-purple-600 dark:text-purple-300 leading-relaxed">
+              <h3 className="mb-3 text-2xl font-bold text-primary">No Blogs Available</h3>
+              <p className="text-text-secondary leading-relaxed">
                 We're preparing fresh content. Check back soon for updates!
               </p>
             </div>
