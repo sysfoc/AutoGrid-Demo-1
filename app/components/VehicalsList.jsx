@@ -474,7 +474,6 @@ const VehicalsList = ({ loadingState }) => {
             <div className="mt-2 h-1 w-20 rounded-full bg-primary"></div>
           </div>
 
-          {/* View All Button */}
           <div className="flex items-center gap-4">
             <Link href={"/car-for-sale"}>
               <div className="group inline-flex transform items-center gap-3 rounded-2xl border border-primary/30 bg-primary px-6 py-3 font-bold text-text-inverse shadow-xl transition-all duration-300 hover:scale-105 hover:bg-primary-hover hover:shadow-2xl hover:shadow-primary/30">

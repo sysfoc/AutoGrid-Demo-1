@@ -55,12 +55,10 @@ const CustomSelect = ({
       >
         <div className="flex items-center justify-between">
           <span
-            className={`value
-              ?
-                "text-gray-900" :
-                "text-gray-500" truncate
-            `}
-          >
+  className={`truncate ${
+    value ? "text-gray-900" : "text-gray-500"
+  }`}
+>
             {value
               ? options.find((opt) => opt.value === value)?.label
               : placeholder}
