@@ -272,14 +272,14 @@ const HeroSection = () => {
     const fetchLogo = async () => {
       try {
         const cachedData = CacheManager.get("header_settings");
-        if (cachedData?.settings?.logo1) {
-          setLogo(cachedData.settings.logo1);
+        if (cachedData?.settings?.logo5) {
+          setLogo(cachedData.settings.logo5);
           return;
         }
         const response = await fetch("/api/settings/general");
         const data = await response.json();
         CacheManager.set("header_settings", data);
-        setLogo(data?.settings?.logo1 || "");
+        setLogo(data?.settings?.logo5 || "");
       } catch (error) {
         console.error("Failed to fetch logo:", error);
       }
