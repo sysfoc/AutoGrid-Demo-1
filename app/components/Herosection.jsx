@@ -470,6 +470,7 @@ const HeroSection = () => {
       {/* Main Container */}
       <div className="mx-auto max-w-7xl">
         {/* Header Navigation */}
+{/* Header Navigation */}
         <header className="px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -496,35 +497,35 @@ const HeroSection = () => {
 
             <nav className="hidden items-center space-x-8 rounded-2xl lg:flex">
               <div className="group relative">
-                <button className={navLinkClasses}>
+                <button className="text-text dark:text-text-inverse text-sm px-4 py-3 rounded-lg transition-all duration-300 flex items-center space-x-2 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
                   <FaCar className="mr-1 h-4 w-4" />
                   Listings
                   <ChevronDown className="ml-1 h-4 w-4" />
                 </button>
-                <div className="invisible absolute left-0 top-full z-50 mt-2 w-48 rounded-lg border border-text-secondary/10 bg-background opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:opacity-100 dark:bg-background-dark">
+                <div className="invisible absolute left-0 top-full z-50 mt-2 w-48 rounded-lg border border-black bg-background opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:opacity-100 dark:bg-background-dark">
                   <Link
                     href="/car-for-sale"
-                    className="block rounded-t-lg px-4 py-3 text-text hover:bg-primary hover:text-white dark:text-text-inverse dark:hover:text-primary"
+                    className="block rounded-t-lg px-4 py-3 text-text dark:text-text-inverse relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                   >
                     Cars for Sale
                   </Link>
                   <Link
                     href="/cars/leasing"
-                    className="block rounded-b-lg px-4 py-3 text-text hover:bg-primary hover:text-white dark:text-text-inverse dark:hover:text-primary"
+                    className="block rounded-b-lg px-4 py-3 text-text dark:text-text-inverse relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                   >
                     Lease Deals
                   </Link>
                 </div>
               </div>
-              <Link href="/cars/valuation" className={navLinkClasses}>
+              <Link href="/cars/valuation" className="text-text dark:text-text-inverse text-sm px-4 py-3 rounded-lg transition-all duration-300 flex items-center space-x-2 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
                 <FaCalculator className="mr-1 h-4 w-4" />
                 Car Valuation
               </Link>
-              <Link href="/car-financing" className={navLinkClasses}>
+              <Link href="/car-financing" className="text-text dark:text-text-inverse text-sm px-4 py-3 rounded-lg transition-all duration-300 flex items-center space-x-2 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
                 <FaCalculator className="mr-1 h-4 w-4" />
                 Car Financing
               </Link>
-              <Link href="/cars/about-us" className={navLinkClasses}>
+              <Link href="/cars/about-us" className="text-text dark:text-text-inverse text-sm px-4 py-3 rounded-lg transition-all duration-300 flex items-center space-x-2 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
                 <FaHandshake className="mr-1 h-4 w-4" />
                 Vehicle Services
               </Link>
@@ -532,7 +533,7 @@ const HeroSection = () => {
 
             {/* Right Actions */}
             <div className="flex items-center space-x-4">
-              <button
+               <button
                 onClick={navigateToLogin}
                 className="hidden items-center rounded-lg border-2 border-primary bg-background px-4 py-2 font-medium text-primary transition-colors hover:bg-primary hover:text-text-inverse lg:flex"
               >
@@ -543,7 +544,7 @@ const HeroSection = () => {
                 {!topSettings.hideFavourite && (
                   <button
                     onClick={navigateToLikedCars}
-                    className="rounded-lg p-3 text-text transition-colors hover:bg-primary hover:text-text-inverse dark:text-text-inverse"
+                    className="rounded-lg p-3 text-text transition-all duration-300 dark:text-text-inverse relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                   >
                     <Heart className="h-5 w-5" />
                   </button>
@@ -551,7 +552,7 @@ const HeroSection = () => {
                 {!topSettings.hideDarkMode && (
                   <button
                     onClick={toggleDarkMode}
-                    className="rounded-lg p-3 text-text transition-colors hover:bg-primary hover:text-text-inverse dark:text-text-inverse"
+                    className="rounded-lg p-3 text-text transition-all duration-300 dark:text-text-inverse relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                   >
                     {darkMode ? (
                       <Sun className="h-5 w-5" />
@@ -565,7 +566,7 @@ const HeroSection = () => {
               {/* Mobile Menu Button */}
               <button
                 onClick={handleMobileMenuOpen}
-                className="rounded-lg p-2 text-text hover:bg-primary/10 dark:text-text-inverse lg:hidden"
+                className="rounded-lg p-2 text-text dark:text-text-inverse lg:hidden transition-all duration-300 hover:shadow-lg relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
               >
                 <Menu className="h-5 w-5" />
               </button>

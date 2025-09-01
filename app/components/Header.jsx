@@ -364,7 +364,7 @@ const Header = () => {
             <div className="hidden items-center space-x-6 lg:flex">
               {/* Listings Dropdown */}
               <div className="group relative">
-                <button className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--text)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg active:scale-95">
+                <button className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--text)] transition-all duration-300 active:scale-95 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full">
                   <FaCar className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                   <span>Listings</span>
                   <ChevronDown className="h-4 w-4" />
@@ -376,13 +376,13 @@ const Header = () => {
                 >
                   <Link
                     href="/car-for-sale"
-                    className="block rounded-t-lg px-4 py-3 text-[var(--text)] hover:bg-[var(--primary)] hover:text-white"
+                    className="block rounded-t-lg px-4 py-3 text-[var(--text)] relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                   >
                     Cars for Sale
                   </Link>
                   <Link
                     href="/cars/leasing"
-                    className="block rounded-b-lg px-4 py-3 text-[var(--text)] hover:bg-[var(--primary)] hover:text-white"
+                    className="block rounded-b-lg px-4 py-3 text-[var(--text)] relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                   >
                     Lease Deals
                   </Link>
@@ -396,7 +396,7 @@ const Header = () => {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--text)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg active:scale-95"
+                    className="group flex items-center space-x-2 rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--text)] transition-all duration-300 active:scale-95 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                   >
                     <IconComponent className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                     <span>{link.name}</span>
@@ -406,7 +406,7 @@ const Header = () => {
             </div>
 
             <div className="flex items-center space-x-3">
-              <button
+               <button
                 onClick={navigateToLogin}
                 aria-label="Sign Up"
                 className={`focus:ring-[var(--primary)]/50 hidden items-center space-x-2 rounded-lg border-2 border-[var(--primary)] bg-[var(--bg)] px-4 py-2.5 text-sm font-medium text-[var(--primary)] transition-all duration-300 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 lg:flex ${isLoading ? "opacity-75" : "opacity-100"}`}
@@ -419,18 +419,18 @@ const Header = () => {
               <button
                 onClick={handleMobileMenuOpen}
                 aria-label="Open Menu"
-                className="focus:ring-[var(--primary)]/50 group relative rounded-lg bg-[var(--bg-secondary)] p-3 transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 lg:hidden"
+                className="focus:ring-[var(--primary)]/50 group relative rounded-lg bg-[var(--bg-secondary)] p-3 transition-all duration-300 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 lg:hidden after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
               >
-                <Menu className="h-5 w-5 text-[var(--text)] transition-colors duration-300 group-hover:text-[var(--text-inverse)]" />
+                <Menu className="h-5 w-5 text-[var(--text)] transition-colors duration-300" />
               </button>
 
               {!topSettings.hideFavourite && (
                 <button
                   onClick={navigateToLikedCars}
                   aria-label="Liked Cars"
-                  className={`focus:ring-[var(--primary)]/50 group relative hidden rounded-lg bg-[var(--bg-secondary)] p-3 transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 md:flex ${isLoading ? "opacity-75" : "opacity-100"}`}
+                  className={`focus:ring-[var(--primary)]/50 group relative hidden rounded-lg p-3 transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 md:flex after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full ${isLoading ? "opacity-75" : "opacity-100"}`}
                 >
-                  <Heart className="h-5 w-5 text-[var(--text)] transition-colors duration-300 group-hover:text-[var(--text-inverse)]" />
+                  <Heart className="h-5 w-5 text-[var(--text)] transition-colors duration-300" />
                 </button>
               )}
 
@@ -438,7 +438,7 @@ const Header = () => {
                 {!topSettings.hideDarkMode && (
                   <button
                     onClick={toggleDarkMode}
-                    className={`hover:ring-[var(--primary)]/50 group relative rounded-lg bg-[var(--bg-secondary)] p-3 text-[var(--text)] backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] hover:shadow-lg ${isLoading ? "opacity-75" : "opacity-100"}`}
+                    className={`hover:ring-[var(--primary)]/50 group relative rounded-lg p-3 text-[var(--text)] backdrop-blur-sm transition-all duration-300 hover:scale-105 after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full ${isLoading ? "opacity-75" : "opacity-100"}`}
                     aria-label="Toggle dark mode"
                   >
                     {darkMode ? (
@@ -454,7 +454,7 @@ const Header = () => {
                 {!topSettings.hideDarkMode && (
                   <button
                     onClick={toggleDarkMode}
-                    className={`hover:ring-[var(--primary)]/50 group rounded-lg bg-[var(--bg-secondary)] p-3 text-[var(--text)] ring-1 ring-[var(--text-secondary)] backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-[var(--primary)] hover:text-[var(--text-inverse)] ${isLoading ? "opacity-75" : "opacity-100"}`}
+                    className={`hover:ring-[var(--primary)]/50 group rounded-lg bg-[var(--bg-secondary)] p-3 text-[var(--text)] ring-1 ring-[var(--text-secondary)] backdrop-blur-sm transition-all duration-300 hover:scale-105 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full ${isLoading ? "opacity-75" : "opacity-100"}`}
                     aria-label="Toggle dark mode"
                   >
                     {darkMode ? (
@@ -491,7 +491,7 @@ const Header = () => {
             <button
               onClick={handleMobileMenuClose}
               aria-label="Close Menu"
-              className="focus:ring-[var(--primary)]/50 rounded-lg p-2 text-[var(--text-secondary)] transition-all duration-300 hover:scale-105 hover:bg-[var(--primary-light)] hover:text-[var(--primary)] focus:outline-none focus:ring-2"
+              className="focus:ring-[var(--primary)]/50 rounded-lg p-2 text-[var(--text-secondary)] transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
             >
               <FaTimes className="h-4 w-4" />
             </button>
@@ -505,7 +505,7 @@ const Header = () => {
                   key={link.href}
                   href={link.href}
                   onClick={handleMobileMenuClose}
-                  className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-[var(--text)] transition-all duration-200 hover:bg-[var(--bg-secondary)] hover:text-[var(--primary)]"
+                  className="flex items-center space-x-3 rounded-lg px-3 py-2 text-base font-medium text-[var(--text)] transition-all duration-200 relative after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-0 after:bg-[var(--primary)] after:transition-all after:duration-300 hover:after:left-0 hover:after:w-full"
                 >
                   <IconComponent className="h-5 w-5" />
                   <span>{link.name}</span>
