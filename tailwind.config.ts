@@ -12,6 +12,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+         "app-button" : "#662bcc",
+        "app-button-hover": "#5524ab"   ,
         // Only 3 main colors with essential shades
         primary: {
           DEFAULT: '#662bcc',  // Main purple (buttons, links, brand)
